@@ -3,6 +3,8 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const adminRouter = require("./routes/admin_route");
+const stationMasterRouter = require("./routes/station_master_route");
 require("dotenv").config();
 require("./config/db");
 
@@ -19,6 +21,9 @@ app.use(cors({
 
 //express serve public folder as static
 app.use(express.static(path.join(__dirname, "public")));
+
+app.use("/api/v2", adminRouter);
+app.use("/api/v2", stationMasterRouter);
 
 app.get("/", (req, res) => {
   res.end("Hello from transit-master-server");

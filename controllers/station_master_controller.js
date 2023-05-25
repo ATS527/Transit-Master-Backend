@@ -1,19 +1,19 @@
-const Admin = require("../models/user_model");
+const StationMaster = require("../models/user_model");
 const sendToken = require("../utils/jwtToken")
 const bcrypt = require("bcryptjs");
 
-exports.createAdmin = async (req, res, next) => {
+exports.createStationMaster = async (req, res, next) => {
     try {
         const username = req.body.username;
         const email = req.body.email;
         const password = req.body.password;
-        const role = "admin";
+        const role = "station-master";
 
-        const admin = await Admin.findOne({
+        const stationMaster = await StationMaster.findOne({
             email: email,
         });
 
-        if (admin) {
+        if (stationMaster) {
             res.status(400).json({
                 success: false,
                 message: "Email already exists",
@@ -21,14 +21,14 @@ exports.createAdmin = async (req, res, next) => {
             return;
         }
 
-        const adminCreated = new Admin({
+        const stationMasterCreated = new StationMaster({
             username: username,
             email: email,
             password: password,
             role: role,
         });
 
-        await adminCreated.save()
+        await stationMasterCreated.save()
             .then((result) => {
                 sendToken(result, 201, res);
             })
@@ -36,7 +36,7 @@ exports.createAdmin = async (req, res, next) => {
                 console.log(error);
                 res.status(500).json({
                     success: false,
-                    message: "Admin creation failed",
+                    message: "Station Master creation failed",
                     error: error,
                 });
             });
@@ -44,51 +44,51 @@ exports.createAdmin = async (req, res, next) => {
         console.log(err);
         res.status(500).json({
             success: false,
-            message: "Admin creation failed",
+            message: "Station Master creation failed",
             error: err,
         });
     }
 };
 
-exports.getAllAdmins = async (req, res, next) => {
+exports.getAllStationMasters = async (req, res, next) => {
     try {
-        const admins = await Admin.find({
-            role: "admin",
+        const stationMasters = await StationMaster.find({
+            role: "station-master",
         });
 
         res.status(200).json({
             success: true,
-            message: "Get all admins success",
-            admins: admins,
+            message: "Get all station masters success",
+            stationMasters: stationMasters,
         });
     } catch (err) {
         console.log(err);
         res.status(500).json({
             success: false,
-            message: "Get all admins failed",
+            message: "Get all station master failed",
             error: err,
         });
     }
 };
 
-exports.loginAdmin = async (req, res, next) => {
+exports.loginStationMaster = async (req, res, next) => {
     try {
         const email = req.body.email;
         const password = req.body.password;
 
-        const admin = await Admin.findOne({
+        const stationMaster = await StationMaster.findOne({
             email: email,
         });
 
-        if (!admin) {
+        if (!stationMaster) {
             res.status(404).json({
                 success: false,
-                message: "Admin not found",
+                message: "Station Master not found",
             });
             return;
         }
 
-        const isPasswordMatched = bcrypt.compareSync(password, admin.password);
+        const isPasswordMatched = bcrypt.compareSync(password, stationMaster.password);
 
         if (!isPasswordMatched) {
             res.status(401).json({
@@ -98,7 +98,7 @@ exports.loginAdmin = async (req, res, next) => {
             return;
         }
 
-        sendToken(admin, 200, res);
+        sendToken(stationMaster, 200, res);
     } catch (err) {
         console.log(err);
         res.status(500).json({
@@ -109,7 +109,7 @@ exports.loginAdmin = async (req, res, next) => {
     }
 };
 
-exports.logoutAdmin = async (req, res, next) => {
+exports.logoutStationMaster = async (req, res, next) => {
     try {
         res.cookie("token", null, {
             expires: new Date(Date.now()),
@@ -133,25 +133,23 @@ exports.logoutAdmin = async (req, res, next) => {
     }
 };
 
-exports.getCurrentlyLoggedinAdmin = async (req, res, next) => {
+exports.getCurrentlyLoggedinStationMaster = async (req, res, next) => {
     try {
-        const admin = await Admin.find({
+        const stationMaster = await StationMaster.find({
             _id: req.user._id,
         });
 
-        console.log("admin ==>" + admin);
-
-        if (!admin) {
+        if (!stationMaster) {
             res.status(401).json({
                 success: false,
-                message: "Admin not found",
+                message: "Station Master not found",
             });
             return;
         }
 
         res.status(200).json({
             success: true,
-            data: admin,
+            data: stationMaster,
         });
     } catch (err) {
         console.log(err);
@@ -163,14 +161,14 @@ exports.getCurrentlyLoggedinAdmin = async (req, res, next) => {
     }
 }
 
-exports.deleteAdmin = async (req, res, next) => {
+exports.deleteStationMaster = async (req, res, next) => {
     try {
-        const admin = await Admin.findOneAndDelete({
+        const stationMaster = await StationMaster.findOneAndDelete({
             email: req.params.email
         }).then((result) => {
             res.status(200).json({
                 success: true,
-                message: "Admin deleted successfully",
+                message: "Station Master deleted successfully",
             });
         }).catch(err => {
             console.log(err);
