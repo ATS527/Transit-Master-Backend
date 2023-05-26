@@ -4,6 +4,8 @@ const clientSchema = new mongoose.Schema({
     user_id: {
         type: mongoose.SchemaTypes.ObjectId,
         required: true,
+        primaryKey: true,
+        ref: "User",
     },
     full_name: {
         type: String,
@@ -20,7 +22,7 @@ const clientSchema = new mongoose.Schema({
     nearest_dippo: {
         type: String,
     },
-    annual_income_link: {
+    income_certificate_link: {
         type: String,
     },
     aadhar_link: {
