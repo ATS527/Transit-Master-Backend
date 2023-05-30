@@ -1,8 +1,12 @@
 const mongoose = require("mongoose");
 
 const routeSchema = new mongoose.Schema({
-    bus_id: {
-        type: mongoose.SchemaTypes.ObjectId,
+    route_id: {
+        type: String,
+        primaryKey: true
+    },
+    bus_type: {
+        type: String,
     },
     route: {
         route_from : {
@@ -25,12 +29,9 @@ const routeSchema = new mongoose.Schema({
         stop_time: {
             type: Date,
         },
-        fare: {
-            type: Number,
-        }
     }],
-    current_position: {
-        type: String,
+    price_per_km: {
+        type: Number,
     },
     createdAt: {
         type: Date,

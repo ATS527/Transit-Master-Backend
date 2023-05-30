@@ -1,6 +1,6 @@
 const clientRouter = require('express').Router();
 
-const { createClient,getClientDetailsById, createClientDetails, getAllClients, deleteClient, getCurrentlyLoggedinClient, loginClient, logoutClient } = require("../controllers/client_controller");
+const { createClient,getClientDetailsById,updateClientDetails, createClientDetails, getAllClients, deleteClient, getCurrentlyLoggedinClient, loginClient, logoutClient } = require("../controllers/client_controller");
 
 const { isAuthenticatedUser, authorizeRoles } = require("../middleware/auth");
 
@@ -22,5 +22,6 @@ clientRouter.get("/getCurrentlyLoggedinClient", isAuthenticatedUser, authorizeRo
 
 clientRouter.get("/getClientDetailsById/:id", isAuthenticatedUser, authorizeRoles("admin", "station-master","client"), getClientDetailsById);
 
-module.exports = clientRouter;
+clientRouter.put("/updateClientDetails/:id", isAuthenticatedUser, authorizeRoles("admin", "station-master","client"), upload.fields([{ name: "aadhar", maxCount: 1 }, { name: "income_certificate", maxCount: 1 }, { name: "ration_card", maxCount: 1 }]), updateClientDetails);
 
+module.exports = clientRouter;

@@ -45,6 +45,9 @@ clientSchema.pre("save", function(next) {
     if (!this.createdAt) {
         this.createdAt = currentDate;
     }
+    this.income_certificate_link = null;
+    this.aadhar_link = null;
+    this.ration_card_link = null;
     next();
 });
 

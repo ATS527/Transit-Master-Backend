@@ -139,8 +139,6 @@ exports.getCurrentlyLoggedinAdmin = async (req, res, next) => {
             _id: req.user._id,
         });
 
-        console.log("admin ==>" + admin);
-
         if (!admin) {
             res.status(401).json({
                 success: false,

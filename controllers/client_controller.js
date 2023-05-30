@@ -2,6 +2,8 @@ const Client = require("../models/user_model");
 const ClientDetails = require("../models/client_details");
 const sendToken = require("../utils/jwtToken")
 const bcrypt = require("bcryptjs");
+const { link } = require("fs");
+const fs = require("fs").promises;
 
 const server_url = process.env.SERVER_URL || "http://localhost:3000/client_documents/";
 
@@ -64,14 +66,14 @@ exports.createClientDetails = async (req, res, next) => {
             nearest_dippo: req.body.nearest_dippo,
         });
 
-        if(req.files) {
-            if(req.files.income_certificate) {
+        if (req.files) {
+            if (req.files.income_certificate) {
                 clientDetails.income_certificate_link = server_url + req.files.income_certificate[0].filename;
             }
-            if(req.files.aadhar) {
+            if (req.files.aadhar) {
                 clientDetails.aadhar_link = server_url + req.files.aadhar[0].filename;
             }
-            if(req.files.ration_card) {
+            if (req.files.ration_card) {
                 clientDetails.ration_card_link = server_url + req.files.ration_card[0].filename;
             }
             await clientDetails.save();
@@ -93,6 +95,80 @@ exports.createClientDetails = async (req, res, next) => {
     }
 }
 
+exports.updateClientDetails = async (req, res, next) => {
+    try {
+        const clientDetails = await ClientDetails.findOne({
+            user_id: req.params.id,
+        });
+
+        if (!clientDetails) {
+            res.status(404).json({
+                success: false,
+                message: "Client not found",
+            });
+            return;
+        }
+
+        clientDetails.full_name = req.body.full_name;
+        clientDetails.phone_number = req.body.phone_number;
+        clientDetails.address = req.body.address;
+        clientDetails.pin_code = req.body.pin_code;
+        clientDetails.nearest_dippo = req.body.nearest_dippo;
+
+        if (req.files) {
+            if (req.files.income_certificate) {
+                if (clientDetails.income_certificate_link !== null) {
+                    const strippedFileName = clientDetails.income_certificate_link.replace(server_url, "");
+                    await fs.unlink("./public/client_documents/" + strippedFileName, (err) => {
+                        if (err) {
+                            console.log(err);
+                        }
+                    });
+                }
+                clientDetails.income_certificate_link = server_url + req.files.income_certificate[0].filename;
+            }
+            if (req.files.aadhar) {
+                if (clientDetails.aadhar_link !== null) {
+                    const strippedFileName = clientDetails.aadhar_link.replace(server_url, "");
+                    await fs.unlink("./public/client_documents/" + strippedFileName, (err) => {
+                        if (err) {
+                            console.log(err);
+                        }
+                    });
+                }
+                clientDetails.aadhar_link = server_url + req.files.aadhar[0].filename;
+            }
+            if (req.files.ration_card) {
+                if (clientDetails.ration_card_link !== null) {
+                    const strippedFileName = clientDetails.ration_card_link.replace(server_url, "");
+                    await fs.unlink("./public/client_documents/" + strippedFileName, (err) => {
+                        if (err) {
+                            console.log(err);
+                        }
+                    });
+                }
+                clientDetails.ration_card_link = server_url + req.files.ration_card[0].filename;
+            }
+        }
+
+        await clientDetails.save();
+
+        res.status(200).json({
+            success: true,
+            message: "client details updated",
+            clientDetails: clientDetails,
+        });
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            success: false,
+            message: "client details updation failed",
+            error: err,
+        });
+    }
+}
+
 exports.getClientDetailsById = async (req, res, next) => {
     const id = req.params.id;
 
@@ -100,7 +176,7 @@ exports.getClientDetailsById = async (req, res, next) => {
         // get the client details by the id and populate the user_id field and omit the password field
         const clientDetails = await ClientDetails.findOne({
             user_id: id,
-        }).populate("user_id", "-password -_id __v");
+        }).populate("user_id", "-password -_id -__v");
 
         if (!clientDetails) {
             res.status(404).json({
@@ -128,7 +204,7 @@ exports.getClientDetailsById = async (req, res, next) => {
 
 exports.getAllClients = async (req, res, next) => {
     try {
-        const clientDetails = await ClientDetails.find().populate("user_id","-password -__v");
+        const clientDetails = await ClientDetails.find().populate("user_id", "-password -__v");
 
         res.status(200).json({
             success: true,
@@ -235,25 +311,57 @@ exports.getCurrentlyLoggedinClient = async (req, res, next) => {
     }
 }
 
-exports.deleteClient = async (req, res, next) => {
+exports.deleteClient = async (req, res) => {
     try {
-        const client = await ClientDetails.deleteOne({
+        await ClientDetails.findOne({
             user_id: req.params.id
         }).then(async (result) => {
-            await Client.deleteOne({
-                _id: req.params.id
-            });
-            res.status(200).json({
-                success: true,
-                message: "Client deleted successfully",
-            });
-        }).catch(err => {
-            console.log(err);
-            res.status(200).json({
-                success: true,
-                message: err.message
+            if (result.income_certificate_link) {
+                const strippedFileName = result.income_certificate_link.replace(server_url, "");
+                await fs.unlink("./public/client_documents/" + strippedFileName, (err) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                });
+            }
+
+            if (result.aadhar_link !== undefined) {
+                const strippedFileName = result.aadhar_link.replace(server_url, "");
+                await fs.unlink("./public/client_documents/" + strippedFileName, (err) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                });
+            }
+
+            if (result.ration_card_link !== undefined) {
+                const strippedFileName = result.ration_card_link.replace(server_url, "");
+                await fs.unlink("./public/client_documents/" + strippedFileName, (err) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                });
+            }
+        }).then(async () => {
+            await ClientDetails.deleteOne({
+                user_id: req.params.id
+            }).then(async () => {
+                await Client.deleteOne({
+                    _id: req.params.id
+                });
+                res.status(200).json({
+                    success: true,
+                    message: "Client deleted successfully",
+                });
             })
-        });
+        })
+            .catch(err => {
+                console.log(err);
+                res.status(500).json({
+                    success: false,
+                    message: err.message
+                })
+            });
     } catch (err) {
         console.log(err);
         res.status(500).json({

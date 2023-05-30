@@ -1,10 +1,6 @@
 const mongoose = require("mongoose");
 
 const busSchema = new mongoose.Schema({
-    bus_type: {
-        type: String,
-        required: true,
-    },
     bus_dippo: {
         type: String,
     },
@@ -14,6 +10,9 @@ const busSchema = new mongoose.Schema({
     },
     total_seats: {
         type: Number,
+    },
+    status: {
+        type: String,
     },
     createdAt: {
         type: Date,
