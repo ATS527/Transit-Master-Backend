@@ -1,19 +1,19 @@
-const Client = require("../models/user_model");
-const ClientDetails = require("../models/client_details");
+const Student = require("../models/user_model");
+const StudentDetails = require("../models/client_details");
 const sendToken = require("../utils/jwtToken")
 const bcrypt = require("bcryptjs");
 const fs = require("fs").promises;
 
-const server_url = process.env.SERVER_URL || "http://localhost:3000/client_documents/";
+const server_url = process.env.SERVER_URL || "http://localhost:3000/student_documents/";
 
-exports.createClient = async (req, res, next) => {
+exports.createStudent = async (req, res, next) => {
     try {
         const username = req.body.username;
         const email = req.body.email;
         const password = req.body.password;
-        const role = "client";
+        const role = "student";
 
-        const client = await Client.findOne({
+        const client = await Student.findOne({
             email: email,
         });
 
@@ -25,14 +25,14 @@ exports.createClient = async (req, res, next) => {
             return;
         }
 
-        const clientCreated = new Client({
+        const studentCreated = new Student({
             username: username,
             email: email,
             password: password,
             role: role,
         });
 
-        await clientCreated.save()
+        await studentCreated.save()
             .then((result) => {
                 sendToken(result, 201, res);
             })
@@ -40,7 +40,7 @@ exports.createClient = async (req, res, next) => {
                 console.log(error);
                 res.status(500).json({
                     success: false,
-                    message: "client creation failed",
+                    message: "student creation failed",
                     error: error,
                 });
             });
@@ -48,206 +48,210 @@ exports.createClient = async (req, res, next) => {
         console.log(err);
         res.status(500).json({
             success: false,
-            message: "client creation failed",
+            message: "student creation failed",
             error: err,
         });
     }
 };
 
-exports.createClientDetails = async (req, res, next) => {
+exports.createStudentDetails = async (req, res, next) => {
     try {
-        const userData = {
+        await StudentDetails.create({
             user_id: req.body.client_id,
-            is_student: false,
             full_name: req.body.full_name,
             phone_number: req.body.phone_number,
             address: req.body.address,
             pin_code: req.body.pin_code,
             nearest_dippo: req.body.nearest_dippo,
-        }
+            is_student: true,
+        });
+
+        const student = await StudentDetails.findOne({
+            user_id: req.body.client_id,
+        });
 
         if (req.files) {
             if (req.files.income_certificate) {
-                userData.income_link = server_url + req.files.income_certificate[0].filename;
+                student.income_link = server_url + req.files.income_certificate[0].filename;
             }
             if (req.files.aadhar) {
-                userData.aadhar_card_link = server_url + req.files.aadhar[0].filename;
+                student.aadhar_card_link = server_url + req.files.aadhar[0].filename;
             }
             if (req.files.ration_card) {
-                userData.ration_link = server_url + req.files.ration_card[0].filename;
+                student.ration_link = server_url + req.files.ration_card[0].filename;
             }
+            await student.save();
         }
 
-        await ClientDetails.create(userData).then(result => {
-            console.log(result);
-            res.status(201).json({
-                success: true,
-                message: "client details created",
-                result
-            });
-        }).catch(err => {
-            console.log(err);
-            return res.status(500).json({
-                success: false,
-                message: "client details creation failed",
-                error: err,
-            });
+        res.status(201).json({
+            success: true,
+            message: "student details created",
+            student,
         });
 
     } catch (err) {
         console.log(err);
         res.status(500).json({
             success: false,
-            message: "client details creation failed",
+            message: "student details creation failed",
             error: err,
         });
     }
 }
 
-exports.updateClientDetails = async (req, res, next) => {
+exports.updateStudentDetails = async (req, res, next) => {
     try {
-        const clientDetails = await ClientDetails.findOne({
+        const studentDetails = await StudentDetails.findOne({
             user_id: req.params.id,
         });
 
-        if (!clientDetails) {
+        if (!studentDetails) {
             res.status(404).json({
                 success: false,
-                message: "Client not found",
+                message: "Student not found",
             });
             return;
         }
 
-        clientDetails.full_name = req.body.full_name;
-        clientDetails.phone_number = req.body.phone_number;
-        clientDetails.address = req.body.address;
-        clientDetails.pin_code = req.body.pin_code;
-        clientDetails.nearest_dippo = req.body.nearest_dippo;
+        studentDetails.full_name = req.body.full_name;
+        studentDetails.phone_number = req.body.phone_number;
+        studentDetails.address = req.body.address;
+        studentDetails.pin_code = req.body.pin_code;
+        studentDetails.nearest_dippo = req.body.nearest_dippo;
 
         if (req.files) {
             if (req.files.income_certificate) {
-                if (clientDetails.income_link !== undefined) {
-                    const strippedFileName = clientDetails.income_link.replace(server_url, "");
-                    await fs.unlink("./public/client_documents/" + strippedFileName, (err) => {
+                if (studentDetails.income_link !== undefined) {
+                    const strippedFileName = studentDetails.income_link.replace(server_url, "");
+                    await fs.unlink("./public/student_documents/" + strippedFileName, (err) => {
                         if (err) {
                             console.log(err);
                         }
                     });
                 }
-                clientDetails.income_link = server_url + req.files.income_certificate[0].filename;
+                studentDetails.income_link = server_url + req.files.income_certificate[0].filename;
+                await studentDetails.save().then(result => {
+                    console.log(result)   
+                }).catch(err => {
+                    console.log(err);   
+                });
             }
             if (req.files.aadhar) {
-                if (clientDetails.aadhar_card_link !== undefined) {
-                    const strippedFileName = clientDetails.aadhar_card_link.replace(server_url, "");
-                    await fs.unlink("./public/client_documents/" + strippedFileName, (err) => {
+                if (studentDetails.aadhar_card_link !== undefined) {
+                    const strippedFileName = studentDetails.aadhar_card_link.replace(server_url, "");
+                    await fs.unlink("./public/student_documents/" + strippedFileName, (err) => {
                         if (err) {
                             console.log(err);
                         }
                     });
                 }
-                clientDetails.aadhar_card_link = server_url + req.  files.aadhar[0].filename;
+                studentDetails.aadhar_card_link = server_url + req.files.aadhar[0].filename;
+                await studentDetails.save();
             }
             if (req.files.ration_card) {
-                if (clientDetails.ration_link !== undefined) {
-                    const strippedFileName = clientDetails.ration_link.replace(server_url, "");
-                    await fs.unlink("./public/client_documents/" + strippedFileName, (err) => {
+                if (studentDetails.ration_link !== undefined) {
+                    const strippedFileName = studentDetails.ration_link.replace(server_url, "");
+                    await fs.unlink("./public/student_documents/" + strippedFileName, (err) => {
                         if (err) {
                             console.log(err);
                         }
                     });
                 }
-                clientDetails.ration_link = server_url + req.files.ration_card[0].filename;
+                studentDetails.ration_link = server_url + req.files.ration_card[0].filename;
+                await studentDetails.save();
             }
         }
 
-        await clientDetails.save();
-
         res.status(200).json({
             success: true,
-            message: "client details updated",
-            clientDetails: clientDetails,
+            message: "student details updated",
+            clientDetails: studentDetails,
         });
 
     } catch (err) {
         console.log(err);
         res.status(500).json({
             success: false,
-            message: "client details updation failed",
+            message: "student details updation failed",
             error: err,
         });
     }
 }
 
-exports.getClientDetailsById = async (req, res, next) => {
+exports.getStudentDetailsById = async (req, res, next) => {
     const id = req.params.id;
 
     try {
         // get the client details by the id and populate the user_id field and omit the password field
-        const clientDetails = await ClientDetails.findOne({
+        const studentDetails = await StudentDetails.findOne({
             user_id: id,
         }).populate("user_id", "-password -_id -__v");
 
-        if (!clientDetails) {
+        if (!studentDetails) {
             res.status(404).json({
                 success: false,
-                message: "Client not found",
+                message: "Student not found",
             });
             return;
         }
 
         res.status(200).json({
             success: true,
-            message: "Get client by id success",
-            clientDetails: clientDetails,
+            message: "Get student by id success",
+            studentDetails,
         });
 
     } catch (err) {
         console.log(err);
         res.status(500).json({
             success: false,
-            message: "Get client by id failed",
+            message: "Get student by id failed",
             error: err,
         });
     }
 }
 
-exports.getAllClients = async (req, res, next) => {
+exports.getAllStudents = async (req, res, next) => {
     try {
-        const clientDetails = await ClientDetails.find().populate("user_id", "-password -__v");
+        const studentDetails = await StudentDetails.find({
+            is_student: true,
+        }).populate("user_id", "-password -__v");
+
+        const s = await StudentDetails.find();
 
         res.status(200).json({
             success: true,
-            message: "Get all clients success",
-            clients: clientDetails,
+            message: "Get all students success",
+            students: studentDetails,
         });
     } catch (err) {
         console.log(err);
         res.status(500).json({
             success: false,
-            message: "Get all clients failed",
+            message: "Get all students failed",
             error: err,
         });
     }
 };
 
-exports.loginClient = async (req, res, next) => {
+exports.loginStudent = async (req, res, next) => {
     try {
         const email = req.body.email;
         const password = req.body.password;
 
-        const client = await Client.findOne({
+        const student = await Student.findOne({
             email: email,
         });
 
-        if (!client) {
+        if (!student) {
             res.status(404).json({
                 success: false,
-                message: "Client not found",
+                message: "Student not found",
             });
             return;
         }
 
-        const isPasswordMatched = bcrypt.compareSync(password, client.password);
+        const isPasswordMatched = bcrypt.compareSync(password, student.password);
 
         if (!isPasswordMatched) {
             res.status(401).json({
@@ -257,7 +261,7 @@ exports.loginClient = async (req, res, next) => {
             return;
         }
 
-        sendToken(client, 200, res);
+        sendToken(student, 200, res);
     } catch (err) {
         console.log(err);
         res.status(500).json({
@@ -268,7 +272,7 @@ exports.loginClient = async (req, res, next) => {
     }
 };
 
-exports.logoutClient = async (req, res, next) => {
+exports.logoutStudent = async (req, res, next) => {
     try {
         res.cookie("token", null, {
             expires: new Date(Date.now()),
@@ -292,23 +296,23 @@ exports.logoutClient = async (req, res, next) => {
     }
 };
 
-exports.getCurrentlyLoggedinClient = async (req, res, next) => {
+exports.getCurrentlyLoggedinStudent = async (req, res, next) => {
     try {
-        const client = await Client.find({
+        const student = await Student.find({
             _id: req.user._id,
         }, "-password");
 
-        if (!client) {
+        if (!student) {
             res.status(401).json({
                 success: false,
-                message: "client not found",
+                message: "student not found",
             });
             return;
         }
 
         res.status(200).json({
             success: true,
-            data: client,
+            data: student,
         });
     } catch (err) {
         console.log(err);
@@ -320,47 +324,47 @@ exports.getCurrentlyLoggedinClient = async (req, res, next) => {
     }
 }
 
-exports.deleteClient = async (req, res) => {
+exports.deleteStudent = async (req, res) => {
     try {
-        await ClientDetails.findOne({
+        await StudentDetails.findOne({
             user_id: req.params.id
         }).then(async (result) => {
-            if (result.income_certificate_link) {
-                const strippedFileName = result.income_certificate_link.replace(server_url, "");
-                await fs.unlink("./public/client_documents/" + strippedFileName, (err) => {
+            if (result.income_link !== undefined) {
+                const strippedFileName = result.income_link.replace(server_url, "");
+                await fs.unlink("./public/student_documents/" + strippedFileName, (err) => {
                     if (err) {
                         console.log(err);
                     }
                 });
             }
 
-            if (result.aadhar_link !== undefined) {
-                const strippedFileName = result.aadhar_link.replace(server_url, "");
-                await fs.unlink("./public/client_documents/" + strippedFileName, (err) => {
+            if (result.aadhar_card_link !== undefined) {
+                const strippedFileName = result.aadhar_card_link.replace(server_url, "");
+                await fs.unlink("./public/student_documents/" + strippedFileName, (err) => {
                     if (err) {
                         console.log(err);
                     }
                 });
             }
 
-            if (result.ration_card_link !== undefined) {
-                const strippedFileName = result.ration_card_link.replace(server_url, "");
-                await fs.unlink("./public/client_documents/" + strippedFileName, (err) => {
+            if (result.ration_link !== undefined) {
+                const strippedFileName = result.ration_link.replace(server_url, "");
+                await fs.unlink("./public/student_documents/" + strippedFileName, (err) => {
                     if (err) {
                         console.log(err);
                     }
                 });
             }
         }).then(async () => {
-            await ClientDetails.deleteOne({
+            await StudentDetails.deleteOne({
                 user_id: req.params.id
             }).then(async () => {
-                await Client.deleteOne({
+                await Student.deleteOne({
                     _id: req.params.id
                 });
                 res.status(200).json({
                     success: true,
-                    message: "Client deleted successfully",
+                    message: "Student deleted successfully",
                 });
             })
         })

@@ -6,6 +6,10 @@ const clientSchema = new mongoose.Schema({
         required: true,
         primaryKey: true,
         ref: "User",
+        unique: true,
+    },
+    is_student: {
+        type: Boolean,
     },
     full_name: {
         type: String,
@@ -22,13 +26,13 @@ const clientSchema = new mongoose.Schema({
     nearest_dippo: {
         type: String,
     },
-    income_certificate_link: {
+    income_link: {
         type: String,
     },
-    aadhar_link: {
+    aadhar_card_link: {
         type: String,
     },
-    ration_card_link: {
+    ration_link: {
         type: String,
     },
     createdAt: {

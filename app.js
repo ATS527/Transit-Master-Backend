@@ -6,6 +6,7 @@ const cors = require("cors");
 const adminRouter = require("./routes/admin_route");
 const stationMasterRouter = require("./routes/station_master_route");
 const clientRouter = require("./routes/client_route");
+const studentRouter = require("./routes/student_route");
 require("dotenv").config();
 require("./config/db");
 
@@ -26,6 +27,8 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/api/v2", adminRouter);
 app.use("/api/v2", stationMasterRouter);
 app.use("/api/v2", clientRouter);
+app.use("/api/v2", studentRouter);
+
 
 app.get("/", (req, res) => {
   res.end("Hello from transit-master-server");
