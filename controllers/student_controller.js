@@ -4,7 +4,7 @@ const sendToken = require("../utils/jwtToken")
 const bcrypt = require("bcryptjs");
 const fs = require("fs").promises;
 
-const server_url = process.env.SERVER_URL || "http://localhost:3000/student_documents/";
+const student_server_url = process.env.SERVER_URL + "/student_documents/" || "http://localhost:3000/student_documents/";
 
 exports.createStudent = async (req, res, next) => {
     try {
@@ -72,13 +72,13 @@ exports.createStudentDetails = async (req, res, next) => {
 
         if (req.files) {
             if (req.files.income_certificate) {
-                student.income_link = server_url + req.files.income_certificate[0].filename;
+                student.income_link = student_server_url + req.files.income_certificate[0].filename;
             }
             if (req.files.aadhar) {
-                student.aadhar_card_link = server_url + req.files.aadhar[0].filename;
+                student.aadhar_card_link = student_server_url + req.files.aadhar[0].filename;
             }
             if (req.files.ration_card) {
-                student.ration_link = server_url + req.files.ration_card[0].filename;
+                student.ration_link = student_server_url + req.files.ration_card[0].filename;
             }
             await student.save();
         }
@@ -122,14 +122,14 @@ exports.updateStudentDetails = async (req, res, next) => {
         if (req.files) {
             if (req.files.income_certificate) {
                 if (studentDetails.income_link !== undefined) {
-                    const strippedFileName = studentDetails.income_link.replace(server_url, "");
+                    const strippedFileName = studentDetails.income_link.replace(student_server_url, "");
                     await fs.unlink("./public/student_documents/" + strippedFileName, (err) => {
                         if (err) {
                             console.log(err);
                         }
                     });
                 }
-                studentDetails.income_link = server_url + req.files.income_certificate[0].filename;
+                studentDetails.income_link = student_server_url + req.files.income_certificate[0].filename;
                 await studentDetails.save().then(result => {
                     console.log(result)   
                 }).catch(err => {
@@ -138,26 +138,26 @@ exports.updateStudentDetails = async (req, res, next) => {
             }
             if (req.files.aadhar) {
                 if (studentDetails.aadhar_card_link !== undefined) {
-                    const strippedFileName = studentDetails.aadhar_card_link.replace(server_url, "");
+                    const strippedFileName = studentDetails.aadhar_card_link.replace(student_server_url, "");
                     await fs.unlink("./public/student_documents/" + strippedFileName, (err) => {
                         if (err) {
                             console.log(err);
                         }
                     });
                 }
-                studentDetails.aadhar_card_link = server_url + req.files.aadhar[0].filename;
+                studentDetails.aadhar_card_link = student_server_url + req.files.aadhar[0].filename;
                 await studentDetails.save();
             }
             if (req.files.ration_card) {
                 if (studentDetails.ration_link !== undefined) {
-                    const strippedFileName = studentDetails.ration_link.replace(server_url, "");
+                    const strippedFileName = studentDetails.ration_link.replace(student_server_url, "");
                     await fs.unlink("./public/student_documents/" + strippedFileName, (err) => {
                         if (err) {
                             console.log(err);
                         }
                     });
                 }
-                studentDetails.ration_link = server_url + req.files.ration_card[0].filename;
+                studentDetails.ration_link = student_server_url + req.files.ration_card[0].filename;
                 await studentDetails.save();
             }
         }
@@ -330,7 +330,7 @@ exports.deleteStudent = async (req, res) => {
             user_id: req.params.id
         }).then(async (result) => {
             if (result.income_link !== undefined) {
-                const strippedFileName = result.income_link.replace(server_url, "");
+                const strippedFileName = result.income_link.replace(student_server_url, "");
                 await fs.unlink("./public/student_documents/" + strippedFileName, (err) => {
                     if (err) {
                         console.log(err);
@@ -339,7 +339,7 @@ exports.deleteStudent = async (req, res) => {
             }
 
             if (result.aadhar_card_link !== undefined) {
-                const strippedFileName = result.aadhar_card_link.replace(server_url, "");
+                const strippedFileName = result.aadhar_card_link.replace(student_server_url, "");
                 await fs.unlink("./public/student_documents/" + strippedFileName, (err) => {
                     if (err) {
                         console.log(err);
@@ -348,7 +348,7 @@ exports.deleteStudent = async (req, res) => {
             }
 
             if (result.ration_link !== undefined) {
-                const strippedFileName = result.ration_link.replace(server_url, "");
+                const strippedFileName = result.ration_link.replace(student_server_url, "");
                 await fs.unlink("./public/student_documents/" + strippedFileName, (err) => {
                     if (err) {
                         console.log(err);

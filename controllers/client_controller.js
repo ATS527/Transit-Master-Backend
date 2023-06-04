@@ -4,7 +4,7 @@ const sendToken = require("../utils/jwtToken")
 const bcrypt = require("bcryptjs");
 const fs = require("fs").promises;
 
-const server_url = process.env.SERVER_URL || "http://localhost:3000/client_documents/";
+const client_server_url = process.env.SERVER_URL + "/client_documents/" || "http://localhost:3000/client_documents/";
 
 exports.createClient = async (req, res, next) => {
     try {
@@ -68,13 +68,13 @@ exports.createClientDetails = async (req, res, next) => {
 
         if (req.files) {
             if (req.files.income_certificate) {
-                userData.income_link = server_url + req.files.income_certificate[0].filename;
+                userData.income_link = client_server_url + req.files.income_certificate[0].filename;
             }
             if (req.files.aadhar) {
-                userData.aadhar_card_link = server_url + req.files.aadhar[0].filename;
+                userData.aadhar_card_link = client_server_url + req.files.aadhar[0].filename;
             }
             if (req.files.ration_card) {
-                userData.ration_link = server_url + req.files.ration_card[0].filename;
+                userData.ration_link = client_server_url + req.files.ration_card[0].filename;
             }
         }
 
@@ -127,36 +127,36 @@ exports.updateClientDetails = async (req, res, next) => {
         if (req.files) {
             if (req.files.income_certificate) {
                 if (clientDetails.income_link !== undefined) {
-                    const strippedFileName = clientDetails.income_link.replace(server_url, "");
+                    const strippedFileName = clientDetails.income_link.replace(client_server_url, "");
                     await fs.unlink("./public/client_documents/" + strippedFileName, (err) => {
                         if (err) {
                             console.log(err);
                         }
                     });
                 }
-                clientDetails.income_link = server_url + req.files.income_certificate[0].filename;
+                clientDetails.income_link = client_server_url + req.files.income_certificate[0].filename;
             }
             if (req.files.aadhar) {
                 if (clientDetails.aadhar_card_link !== undefined) {
-                    const strippedFileName = clientDetails.aadhar_card_link.replace(server_url, "");
+                    const strippedFileName = clientDetails.aadhar_card_link.replace(client_server_url, "");
                     await fs.unlink("./public/client_documents/" + strippedFileName, (err) => {
                         if (err) {
                             console.log(err);
                         }
                     });
                 }
-                clientDetails.aadhar_card_link = server_url + req.  files.aadhar[0].filename;
+                clientDetails.aadhar_card_link = client_server_url + req.  files.aadhar[0].filename;
             }
             if (req.files.ration_card) {
                 if (clientDetails.ration_link !== undefined) {
-                    const strippedFileName = clientDetails.ration_link.replace(server_url, "");
+                    const strippedFileName = clientDetails.ration_link.replace(client_server_url, "");
                     await fs.unlink("./public/client_documents/" + strippedFileName, (err) => {
                         if (err) {
                             console.log(err);
                         }
                     });
                 }
-                clientDetails.ration_link = server_url + req.files.ration_card[0].filename;
+                clientDetails.ration_link = client_server_url + req.files.ration_card[0].filename;
             }
         }
 
@@ -326,7 +326,7 @@ exports.deleteClient = async (req, res) => {
             user_id: req.params.id
         }).then(async (result) => {
             if (result.income_certificate_link) {
-                const strippedFileName = result.income_certificate_link.replace(server_url, "");
+                const strippedFileName = result.income_certificate_link.replace(client_server_url, "");
                 await fs.unlink("./public/client_documents/" + strippedFileName, (err) => {
                     if (err) {
                         console.log(err);
@@ -335,7 +335,7 @@ exports.deleteClient = async (req, res) => {
             }
 
             if (result.aadhar_link !== undefined) {
-                const strippedFileName = result.aadhar_link.replace(server_url, "");
+                const strippedFileName = result.aadhar_link.replace(client_server_url, "");
                 await fs.unlink("./public/client_documents/" + strippedFileName, (err) => {
                     if (err) {
                         console.log(err);
@@ -344,7 +344,7 @@ exports.deleteClient = async (req, res) => {
             }
 
             if (result.ration_card_link !== undefined) {
-                const strippedFileName = result.ration_card_link.replace(server_url, "");
+                const strippedFileName = result.ration_card_link.replace(client_server_url, "");
                 await fs.unlink("./public/client_documents/" + strippedFileName, (err) => {
                     if (err) {
                         console.log(err);
