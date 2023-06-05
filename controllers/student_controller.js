@@ -4,7 +4,7 @@ const sendToken = require("../utils/jwtToken")
 const bcrypt = require("bcryptjs");
 const fs = require("fs").promises;
 
-const student_server_url = process.env.SERVER_URL + "/student_documents/" || "http://localhost:3000/student_documents/";
+const student_server_url = process.env.SERVER_URL + "/student_documents/";
 
 exports.createStudent = async (req, res, next) => {
     try {

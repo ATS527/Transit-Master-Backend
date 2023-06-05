@@ -4,7 +4,7 @@ const sendToken = require("../utils/jwtToken")
 const bcrypt = require("bcryptjs");
 const fs = require("fs").promises;
 
-const client_server_url = process.env.SERVER_URL + "/client_documents/" || "http://localhost:3000/client_documents/";
+const client_server_url = process.env.SERVER_URL + "/client_documents/";
 
 exports.createClient = async (req, res, next) => {
     try {

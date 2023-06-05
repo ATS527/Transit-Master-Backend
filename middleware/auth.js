@@ -12,8 +12,6 @@ exports.isAuthenticatedUser = async (req, res, next) => {
     }
 
     const decodedData = jwt.verify(token, process.env.JWT_SECRET_KEY);
-
-    // req.user = await admin.findByPk(decodedData.id);
     req.user = await User.findOne({ _id: decodedData.id });
     next();
 };
@@ -21,6 +19,7 @@ exports.isAuthenticatedUser = async (req, res, next) => {
 // Admin Roles
 exports.authorizeRoles = (...roles) => {
     return (req, res, next) => {
+        console.log(req.user)
         if (!roles.includes(req.user.role)) {
             return res.status(500).json({
                 success: false,

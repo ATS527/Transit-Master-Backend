@@ -3,12 +3,14 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+require("dotenv").config();
+
+require("./config/db");
 const adminRouter = require("./routes/admin_route");
 const stationMasterRouter = require("./routes/station_master_route");
 const clientRouter = require("./routes/client_route");
 const studentRouter = require("./routes/student_route");
-require("dotenv").config();
-require("./config/db");
+const nfcCardRequestsRouter = require("./routes/nfc_card_requests_route");
 
 const app = express();
 
@@ -28,6 +30,7 @@ app.use("/api/v2", adminRouter);
 app.use("/api/v2", stationMasterRouter);
 app.use("/api/v2", clientRouter);
 app.use("/api/v2", studentRouter);
+app.use("/api/v2", nfcCardRequestsRouter);
 
 
 app.get("/", (req, res) => {
