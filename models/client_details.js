@@ -21,7 +21,7 @@ const clientSchema = new mongoose.Schema({
         type: String,
     },
     pin_code: {
-        type: String,
+        type: Number,
     },
     nearest_dippo: {
         type: String,

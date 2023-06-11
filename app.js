@@ -11,6 +11,7 @@ const stationMasterRouter = require("./routes/station_master_route");
 const clientRouter = require("./routes/client_route");
 const studentRouter = require("./routes/student_route");
 const nfcCardRequestsRouter = require("./routes/nfc_card_requests_route");
+const nfcCardRouter = require("./routes/nfc_card_route");
 
 const app = express();
 
@@ -31,6 +32,8 @@ app.use("/api/v2", stationMasterRouter);
 app.use("/api/v2", clientRouter);
 app.use("/api/v2", studentRouter);
 app.use("/api/v2", nfcCardRequestsRouter);
+app.use("/api/v2", nfcCardRouter);
+
 
 
 app.get("/", (req, res) => {

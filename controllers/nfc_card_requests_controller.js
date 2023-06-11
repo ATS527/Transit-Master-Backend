@@ -16,8 +16,20 @@ exports.createNFCCardRequest = async (req, res, next) => {
             return;
         }
 
+        const requestCheck = await NFCCardRequests.findOne({
+            user_id: req.user._id,
+        });
+
+        if (requestCheck) {
+            res.status(404).json({
+                success: false,
+                message: "Request already exists",
+            });
+            return;
+        }
+
         const request = await NFCCardRequests.create({
-            user_details_id: userDetails._id,
+            user_id: req.user._id,
             is_student: userDetails.is_student,
         });
 
@@ -27,7 +39,6 @@ exports.createNFCCardRequest = async (req, res, next) => {
         })
 
     } catch (err) {
-        await session.abortTransaction();
         console.log(err);
         res.status(500).json({
             success: false,
@@ -41,7 +52,7 @@ exports.getAllNFCCardClientRequests = async (req, res, next) => {
     try {
         const requests = await NFCCardRequests.find({
             is_student: false,
-        }).populate("user_details_id", "-is_student -__v -updatedAt -income_link -aadhar_card_link -ration_link");
+        });
 
         if (!requests) {
             res.status(404).json({
@@ -51,9 +62,22 @@ exports.getAllNFCCardClientRequests = async (req, res, next) => {
             return;
         }
 
+        const result = [];
+
+        for (var i = 0; i < requests.length; i++) {
+            var map = {
+                request: requests[i],
+                details: await ClientDetails.findOne({
+                    user_id: requests[i].user_id,
+                }),
+            }
+            console.log(map);
+            result.push(map)
+        }
+
         res.status(200).json({
             success: true,
-            data: requests,
+            data: result,
         });
     } catch (err) {
         console.log(err);
@@ -69,7 +93,7 @@ exports.getAllNFCCardStudentRequests = async (req, res, next) => {
     try {
         const requests = await NFCCardRequests.find({
             is_student: true,
-        }).populate("user_details_id","-__v -is_student -updatedAt -income_link -aadhar_card_link -ration_link");
+        }).populate("user_id");
 
         if (!requests) {
             res.status(404).json({
@@ -97,7 +121,7 @@ exports.getNFCCardRequestDetailed = async (req, res, next) => {
     try {
         const request = await NFCCardRequests.findOne({
             _id: req.params.id,
-        }).populate("user_details_id", "-__v");
+        }).populate("user_id", "-__v");
 
         if (!request) {
             res.status(404).json({
@@ -107,9 +131,14 @@ exports.getNFCCardRequestDetailed = async (req, res, next) => {
             return;
         }
 
+        const clientDetails = await ClientDetails.findOne({
+            user_id: request.user_id,
+        },"-__v");
+
         res.status(200).json({
             success: true,
             data: request,
+            clientDetails
         });
     } catch (err) {
         console.log(err);
@@ -128,7 +157,7 @@ exports.validateNFCCardRequest = async (req, res, next) => {
         });
 
         const userDetails = await ClientDetails.findOne({
-            _id: request.user_details_id,
+            user_id: request.user_id,
         });
 
         if (!request) {
@@ -146,8 +175,8 @@ exports.validateNFCCardRequest = async (req, res, next) => {
         await NFCCard.create({
             user_id: userDetails.user_id,
             balance: 10,
+            is_valid: true,
         });
-
 
         res.status(200).json({
             success: true,
@@ -163,3 +192,32 @@ exports.validateNFCCardRequest = async (req, res, next) => {
     }
 }
 
+exports.getCurrentStatusOfNFCRequest = async (req, res) => {
+    try {
+        
+        const request = await NFCCardRequests.findOne({
+            user_id: req.user._id,
+        });
+
+        if (!request) {
+            res.status(404).json({
+                success: false,
+                message: "Request not found",
+            });
+            return;
+        }
+
+        res.status(200).json({
+            success: true,
+            data: request,
+        });
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            success: false,
+            message: "Something went wrong",
+            error: err,
+        })
+    }
+}

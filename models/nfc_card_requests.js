@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 
 const nfcCardRequestsSchema = new mongoose.Schema({
-    user_details_id: {
+    user_id: {
         type: mongoose.SchemaTypes.ObjectId,
-        ref: "clientDetails"
+        ref: "User",
     },
     is_validated: {
         type: Boolean,

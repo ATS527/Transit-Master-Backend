@@ -8,6 +8,9 @@ const nfcSchema = new mongoose.Schema({
     balance: {
         type: Number,
     },
+    is_valid: {
+        type: Boolean,
+    },
     createdAt: {
         type: Date,
     },

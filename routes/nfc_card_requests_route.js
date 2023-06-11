@@ -1,6 +1,6 @@
 const nfcCardRequestsRouter = require('express').Router();
 
-const { createNFCCardRequest, getAllNFCCardClientRequests, getAllNFCCardStudentRequests, getNFCCardRequestDetailed, validateNFCCardRequest } = require("../controllers/nfc_card_requests_controller");
+const { createNFCCardRequest, getCurrentStatusOfNFCRequest,getAllNFCCardClientRequests, getAllNFCCardStudentRequests, getNFCCardRequestDetailed, validateNFCCardRequest } = require("../controllers/nfc_card_requests_controller");
 
 const { isAuthenticatedUser, authorizeRoles } = require("../middleware/auth");
 
@@ -13,6 +13,8 @@ nfcCardRequestsRouter.get("/getAllNFCCardStudentRequests", isAuthenticatedUser, 
 nfcCardRequestsRouter.get("/getNFCCardRequestDetailed/:id", isAuthenticatedUser, authorizeRoles("admin", "station-master", "student", "client"), getNFCCardRequestDetailed);
 
 nfcCardRequestsRouter.put("/validateNFCCardRequest/:id", isAuthenticatedUser, authorizeRoles("admin", "station-master"), validateNFCCardRequest);
+
+nfcCardRequestsRouter.get("/getCurrentStatusOfNFCRequest", isAuthenticatedUser, authorizeRoles("client", "student"), getCurrentStatusOfNFCRequest);
 
 module.exports = nfcCardRequestsRouter;
 

@@ -30,7 +30,11 @@ exports.createStationMaster = async (req, res, next) => {
 
         await stationMasterCreated.save()
             .then((result) => {
-                sendToken(result, 201, res);
+                res.status(200).json({
+                    success: true,
+                    message: "Station Master created successfully",
+                    stationMaster: result,
+                })
             })
             .catch((error) => {
                 console.log(error);
@@ -137,7 +141,7 @@ exports.getCurrentlyLoggedinStationMaster = async (req, res, next) => {
     try {
         const stationMaster = await StationMaster.find({
             _id: req.user._id,
-        });
+        },"-password");
 
         if (!stationMaster) {
             res.status(401).json({

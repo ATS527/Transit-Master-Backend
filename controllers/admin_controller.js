@@ -137,7 +137,7 @@ exports.getCurrentlyLoggedinAdmin = async (req, res, next) => {
     try {
         const admin = await Admin.find({
             _id: req.user._id,
-        });
+        }, "-password");
 
         if (!admin) {
             res.status(401).json({

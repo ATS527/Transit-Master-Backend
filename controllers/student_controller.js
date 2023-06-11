@@ -56,8 +56,21 @@ exports.createStudent = async (req, res, next) => {
 
 exports.createStudentDetails = async (req, res, next) => {
     try {
+
+        const studentDetails = await StudentDetails.findOne({
+            user_id: req.user._id,
+        });
+
+        if (studentDetails) {
+            res.status(400).json({
+                success: false,
+                message: "Student details already exists",
+            });
+            return;
+        }
+
         await StudentDetails.create({
-            user_id: req.body.client_id,
+            user_id: req.user._id,
             full_name: req.body.full_name,
             phone_number: req.body.phone_number,
             address: req.body.address,
@@ -67,7 +80,7 @@ exports.createStudentDetails = async (req, res, next) => {
         });
 
         const student = await StudentDetails.findOne({
-            user_id: req.body.client_id,
+            user_id: req.user._id,
         });
 
         if (req.files) {

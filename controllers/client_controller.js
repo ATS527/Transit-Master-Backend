@@ -3,6 +3,8 @@ const ClientDetails = require("../models/client_details");
 const sendToken = require("../utils/jwtToken")
 const bcrypt = require("bcryptjs");
 const fs = require("fs").promises;
+const NFCCardRequest = require("../models/nfc_card_requests");
+const NFCCard = require("../models/nfc_details");
 
 const client_server_url = process.env.SERVER_URL + "/client_documents/";
 
@@ -57,7 +59,7 @@ exports.createClient = async (req, res, next) => {
 exports.createClientDetails = async (req, res, next) => {
     try {
         const userData = {
-            user_id: req.body.client_id,
+            user_id: req.user._id,
             is_student: false,
             full_name: req.body.full_name,
             phone_number: req.body.phone_number,
@@ -325,8 +327,8 @@ exports.deleteClient = async (req, res) => {
         await ClientDetails.findOne({
             user_id: req.params.id
         }).then(async (result) => {
-            if (result.income_certificate_link) {
-                const strippedFileName = result.income_certificate_link.replace(client_server_url, "");
+            if (result.income_link) {
+                const strippedFileName = result.income_link.replace(client_server_url, "");
                 await fs.unlink("./public/client_documents/" + strippedFileName, (err) => {
                     if (err) {
                         console.log(err);
@@ -334,8 +336,8 @@ exports.deleteClient = async (req, res) => {
                 });
             }
 
-            if (result.aadhar_link !== undefined) {
-                const strippedFileName = result.aadhar_link.replace(client_server_url, "");
+            if (result.aadhar_card_link !== undefined) {
+                const strippedFileName = result.aadhar_card_link.replace(client_server_url, "");
                 await fs.unlink("./public/client_documents/" + strippedFileName, (err) => {
                     if (err) {
                         console.log(err);
@@ -343,8 +345,8 @@ exports.deleteClient = async (req, res) => {
                 });
             }
 
-            if (result.ration_card_link !== undefined) {
-                const strippedFileName = result.ration_card_link.replace(client_server_url, "");
+            if (result.ration_link !== undefined) {
+                const strippedFileName = result.ration_link.replace(client_server_url, "");
                 await fs.unlink("./public/client_documents/" + strippedFileName, (err) => {
                     if (err) {
                         console.log(err);
@@ -355,9 +357,18 @@ exports.deleteClient = async (req, res) => {
             await ClientDetails.deleteOne({
                 user_id: req.params.id
             }).then(async () => {
+                await NFCCardRequest.deleteOne({
+                    user_id: req.params.id
+                });
+
+                await NFCCard.deleteOne({
+                    user_id: req.params.id
+                })
                 await Client.deleteOne({
                     _id: req.params.id
                 });
+
+
                 res.status(200).json({
                     success: true,
                     message: "Client deleted successfully",

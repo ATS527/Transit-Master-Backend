@@ -20,7 +20,7 @@ studentRouter.get("/logoutStudent", logoutStudent);
 
 studentRouter.get("/getCurrentlyLoggedinStudent", isAuthenticatedUser, authorizeRoles("student"), getCurrentlyLoggedinStudent);
 
-studentRouter.get("/getStudentDetailsById/:id", isAuthenticatedUser, authorizeRoles("admin", "station-master"), getStudentDetailsById);
+studentRouter.get("/getStudentDetailsById/:id", isAuthenticatedUser, authorizeRoles("admin", "station-master","student"), getStudentDetailsById);
 
 studentRouter.put("/updateStudentDetails/:id", isAuthenticatedUser, authorizeRoles("admin", "station-master", "student"), studentUpload.fields([{ name: "aadhar", maxCount: 1 }, { name: "income_certificate", maxCount: 1 }, { name: "ration_card", maxCount: 1 }]), updateStudentDetails);
 
