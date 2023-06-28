@@ -1,6 +1,6 @@
 const nfcCardRouter = require('express').Router();
 
-const { NFCAddBalance, NFCShowBalance, activateNFCCard, deactivateNFCCard } = require("../controllers/nfc_card_controller");
+const { NFCAddBalance, NFCShowBalance, activateNFCCard, decrementNFCCardBalance ,deactivateNFCCard } = require("../controllers/nfc_card_controller");
 
 const { isAuthenticatedUser, authorizeRoles } = require("../middleware/auth");
 
@@ -11,5 +11,7 @@ nfcCardRouter.put("/NFCAddBalance", isAuthenticatedUser, authorizeRoles("admin",
 nfcCardRouter.put("/activateNFCCard/:id", isAuthenticatedUser, authorizeRoles("admin", "station-master"), activateNFCCard);
 
 nfcCardRouter.put("/deactivateNFCCard/:id", isAuthenticatedUser, authorizeRoles("admin", "station-master"), deactivateNFCCard);
+
+nfcCardRouter.get("/decrementNFCCardBalance", decrementNFCCardBalance);
 
 module.exports = nfcCardRouter;

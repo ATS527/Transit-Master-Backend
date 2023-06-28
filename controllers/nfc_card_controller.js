@@ -189,6 +189,50 @@ exports.getAllNFCCardDetails = async (req, res, next) => {
     }
 }
 
+exports.decrementNFCCardBalance = async (req, res, next) => {
+    try {
+        const amount = req.query.amount;
+        const id = req.query.id;
+
+        const nfcCard = await NFCCard.findOne({
+            _id: req.query.id,
+        });
+
+        if (!nfcCard) {
+            res.status(404).json({
+                success: false,
+                message: "NFC Card not found",
+            });
+            return;
+        }
+
+        if(nfcCard.is_valid === false) {
+            res.status(404).json({
+                success: false,
+                message: "NFC Card is not valid",
+            });
+            return;
+        }
+
+        nfcCard.balance -= req.body.amount;
+
+        await nfcCard.save();
+
+        res.status(200).json({
+            success: true,
+            message: "Balance decremented successfully",
+            data: nfcCard,
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            success: false,
+            message: "Something went wrong",
+            error: err,
+        });
+    }
+}
+
 
 
 
