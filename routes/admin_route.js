@@ -4,9 +4,9 @@ const { createAdmin, getCurrentlyLoggedinAdmin,getAllAdmins, loginAdmin, logoutA
 
 const {isAuthenticatedUser,authorizeRoles} = require("../middleware/auth");
 
-adminRouter.post("/createAdmin",isAuthenticatedUser,authorizeRoles("admin"), createAdmin);
+// adminRouter.post("/createAdmin",isAuthenticatedUser,authorizeRoles("admin"), createAdmin);
 
-// adminRouter.post("/createAdmin", createAdmin);
+adminRouter.post("/createAdmin", createAdmin);
 
 adminRouter.get("/getAllAdmins",isAuthenticatedUser,authorizeRoles("admin"), getAllAdmins);
 

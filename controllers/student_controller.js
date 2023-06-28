@@ -75,7 +75,7 @@ exports.createStudentDetails = async (req, res, next) => {
             phone_number: req.body.phone_number,
             address: req.body.address,
             pin_code: req.body.pin_code,
-            nearest_dippo: req.body.nearest_dippo,
+            nearest_depot: req.body.nearest_depot,
             is_student: true,
         });
 
@@ -130,7 +130,7 @@ exports.updateStudentDetails = async (req, res, next) => {
         studentDetails.phone_number = req.body.phone_number;
         studentDetails.address = req.body.address;
         studentDetails.pin_code = req.body.pin_code;
-        studentDetails.nearest_dippo = req.body.nearest_dippo;
+        studentDetails.nearest_depot = req.body.nearest_depot;
 
         if (req.files) {
             if (req.files.income_certificate) {

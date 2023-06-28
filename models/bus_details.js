@@ -1,12 +1,14 @@
 const mongoose = require("mongoose");
 
 const busSchema = new mongoose.Schema({
-    bus_dippo: {
+    bus_depot: {
         type: String,
     },
     bus_number: {
         type: String,
         required: true,
+        unique: true,
+        primaryKey: true,
     },
     total_seats: {
         type: Number,

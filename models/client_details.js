@@ -23,7 +23,7 @@ const clientSchema = new mongoose.Schema({
     pin_code: {
         type: Number,
     },
-    nearest_dippo: {
+    nearest_depot: {
         type: String,
     },
     income_link: {

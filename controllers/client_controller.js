@@ -65,7 +65,7 @@ exports.createClientDetails = async (req, res, next) => {
             phone_number: req.body.phone_number,
             address: req.body.address,
             pin_code: req.body.pin_code,
-            nearest_dippo: req.body.nearest_dippo,
+            nearest_depot: req.body.nearest_depot,
         }
 
         if (req.files) {
@@ -124,7 +124,7 @@ exports.updateClientDetails = async (req, res, next) => {
         clientDetails.phone_number = req.body.phone_number;
         clientDetails.address = req.body.address;
         clientDetails.pin_code = req.body.pin_code;
-        clientDetails.nearest_dippo = req.body.nearest_dippo;
+        clientDetails.nearest_depot = req.body.nearest_depot;
 
         if (req.files) {
             if (req.files.income_certificate) {
