@@ -214,7 +214,7 @@ exports.decrementNFCCardBalance = async (req, res, next) => {
             return;
         }
 
-        nfcCard.balance -= req.body.amount;
+        nfcCard.balance -= req.query.amount;
 
         await nfcCard.save();
 
