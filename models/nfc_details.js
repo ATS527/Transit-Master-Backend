@@ -5,6 +5,9 @@ const nfcSchema = new mongoose.Schema({
         type: mongoose.SchemaTypes.ObjectId,
         required: true,
     },
+    card_id: {
+        type: String,
+    },
     balance: {
         type: Number,
     },

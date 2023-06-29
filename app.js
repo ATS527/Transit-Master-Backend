@@ -19,8 +19,9 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
 app.use(cors({
-  origin: "*",
+  origin: ["http://localhost:3000","http://localhost:5500","https://transitserver.theinfinox.in","https://transitmaster.theinfinox.in","https://transitadmin.theinfinox.in"],
   credentials: true,
 }));
 

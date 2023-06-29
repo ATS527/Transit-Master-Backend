@@ -195,7 +195,7 @@ exports.decrementNFCCardBalance = async (req, res, next) => {
         const id = req.query.id;
 
         const nfcCard = await NFCCard.findOne({
-            _id: req.query.id,
+            card_id: req.query.id,
         });
 
         if (!nfcCard) {
