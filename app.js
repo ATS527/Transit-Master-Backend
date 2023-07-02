@@ -21,7 +21,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use(cors({
-  origin: ["http://localhost:3000","http://localhost:5500","https://tm.govindsr.me","https://transitserver.govindsr.me"],
+  origin: ["http://127.0.0.1:3000", "http://127.0.0.1:5500", "https://tm.govindsr.me", "https://transitserver.govindsr.me"],
   credentials: true,
 }));
 
@@ -42,5 +42,5 @@ app.get("/", (req, res) => {
 });
 
 app.listen(process.env.PORT, () => {
-    console.log("Server is running on port " + process.env.PORT + "...")
+  console.log("Server is running on port " + process.env.PORT + "...")
 });
