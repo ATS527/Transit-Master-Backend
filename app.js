@@ -21,7 +21,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use(cors({
-  origin: ["http://localhost:3000","http://localhost:5500","https://transitserver.theinfinox.in","https://transitmaster.theinfinox.in","https://transitadmin.theinfinox.in"],
+  origin: ["http://localhost:3000","http://localhost:5500","https://tm.govindsr.me","https://transitserver.govindsr.me"],
   credentials: true,
 }));
 
