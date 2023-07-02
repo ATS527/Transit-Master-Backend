@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 //remote db
-const db = mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.MONGO_PASSWORD}@${process.env.DB_NAME}.9daglqy.mongodb.net/?retryWrites=true&w=majority`, {
+const db = mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.MONGO_PASSWORD}@${process.env.DB_NAME}.wsirnke.mongodb.net/?retryWrites=true&w=majority`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 });
