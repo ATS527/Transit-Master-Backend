@@ -8,14 +8,14 @@ const {isAuthenticatedUser,authorizeRoles} = require("../middleware/auth");
 
 adminRouter.post("/createAdmin", createAdmin);
 
-adminRouter.get("/getAllAdmins",isAuthenticatedUser,authorizeRoles("admin"), getAllAdmins);
+adminRouter.get("/getAllAdmins",authorizeRoles("admin"), getAllAdmins);
 
 adminRouter.post("/loginAdmin", loginAdmin);
 
 adminRouter.get("/logoutAdmin",logoutAdmin);
 
-adminRouter.get("/getCurrentlyLoggedinAdmin",isAuthenticatedUser,authorizeRoles("admin"), getCurrentlyLoggedinAdmin);
+adminRouter.get("/getCurrentlyLoggedinAdmin",authorizeRoles("admin"), getCurrentlyLoggedinAdmin);
 
-adminRouter.delete("/deleteAdmin/:email",isAuthenticatedUser,authorizeRoles("admin"), deleteAdmin);
+adminRouter.delete("/deleteAdmin/:email",authorizeRoles("admin"), deleteAdmin);
 
 module.exports = adminRouter;
