@@ -23,6 +23,7 @@ app.use(bodyParser.json());
 app.use(cors({
   origin: ["http://127.0.0.1:3000", "http://127.0.0.1:5500", "https://tm.govindsr.me", "https://transitserver.govindsr.me"],
   credentials: true,
+  withCredentials: true
 }));
 
 //express serve public folder as static
