@@ -13,7 +13,7 @@ const sendToken = (user, statusCode, res) => {
         ),
         httpOnly: true,
         sameSite: "None",
-        // secure: true,
+        secure: true,
         // domain: ".govindsr.me",
     };
 
