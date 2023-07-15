@@ -4,14 +4,7 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 require("dotenv").config();
-
 require("./config/db");
-const adminRouter = require("./routes/admin_route");
-const stationMasterRouter = require("./routes/station_master_route");
-const clientRouter = require("./routes/client_route");
-const studentRouter = require("./routes/student_route");
-const nfcCardRequestsRouter = require("./routes/nfc_card_requests_route");
-const nfcCardRouter = require("./routes/nfc_card_route");
 
 const app = express();
 
@@ -24,6 +17,13 @@ app.use(cors({
   origin: ["http://127.0.0.1:3000", "http://127.0.0.1:5500", "https://tm.govindsr.me", "https://transitserver.govindsr.me"],
   credentials: true,
 }));
+
+const adminRouter = require("./routes/admin_route");
+const stationMasterRouter = require("./routes/station_master_route");
+const clientRouter = require("./routes/client_route");
+const studentRouter = require("./routes/student_route");
+const nfcCardRequestsRouter = require("./routes/nfc_card_requests_route");
+const nfcCardRouter = require("./routes/nfc_card_route");
 
 //express serve public folder as static
 app.use(express.static(path.join(__dirname, "public")));
