@@ -16,7 +16,6 @@ const sendToken = (user, statusCode, res) => {
         // secure: true,
         // domain: ".govindsr.me",
     };
-x1
     res.cookie('token', token, options);
     res.status(200).send({ success: true, user });
 }
