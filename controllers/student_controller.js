@@ -58,7 +58,7 @@ exports.createStudentDetails = async (req, res, next) => {
     try {
 
         const studentDetails = await StudentDetails.findOne({
-            user_id: req.user._id,
+            user_id: req.query.user_id,
         });
 
         if (studentDetails) {
@@ -70,7 +70,7 @@ exports.createStudentDetails = async (req, res, next) => {
         }
 
         await StudentDetails.create({
-            user_id: req.user._id,
+            user_id: req.query.user_id,
             full_name: req.body.full_name,
             phone_number: req.body.phone_number,
             address: req.body.address,
@@ -80,7 +80,7 @@ exports.createStudentDetails = async (req, res, next) => {
         });
 
         const student = await StudentDetails.findOne({
-            user_id: req.user._id,
+            user_id: req.query.user_id,
         });
 
         if (req.files) {

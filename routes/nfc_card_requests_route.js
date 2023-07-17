@@ -4,17 +4,17 @@ const { createNFCCardRequest, getCurrentStatusOfNFCRequest,getAllNFCCardClientRe
 
 const { isAuthenticatedUser, authorizeRoles } = require("../middleware/auth");
 
-nfcCardRequestsRouter.post("/createNFCCardRequest", isAuthenticatedUser, authorizeRoles("client", "student"), createNFCCardRequest);
+nfcCardRequestsRouter.post("/createNFCCardRequest", createNFCCardRequest);
 
-nfcCardRequestsRouter.get("/getAllNFCCardClientRequests", isAuthenticatedUser, authorizeRoles("admin", "station-master"), getAllNFCCardClientRequests);
+nfcCardRequestsRouter.get("/getAllNFCCardClientRequests", getAllNFCCardClientRequests);
 
-nfcCardRequestsRouter.get("/getAllNFCCardStudentRequests", isAuthenticatedUser, authorizeRoles("admin", "station-master"), getAllNFCCardStudentRequests);
+nfcCardRequestsRouter.get("/getAllNFCCardStudentRequests", getAllNFCCardStudentRequests);
 
-nfcCardRequestsRouter.get("/getNFCCardRequestDetailed/:id", isAuthenticatedUser, authorizeRoles("admin", "station-master", "student", "client"), getNFCCardRequestDetailed);
+nfcCardRequestsRouter.get("/getNFCCardRequestDetailed/:id", getNFCCardRequestDetailed);
 
-nfcCardRequestsRouter.put("/validateNFCCardRequest/:id", isAuthenticatedUser, authorizeRoles("admin", "station-master"), validateNFCCardRequest);
+nfcCardRequestsRouter.put("/validateNFCCardRequest/:id", validateNFCCardRequest);
 
-nfcCardRequestsRouter.get("/getCurrentStatusOfNFCRequest", isAuthenticatedUser, authorizeRoles("client", "student"), getCurrentStatusOfNFCRequest);
+nfcCardRequestsRouter.get("/getCurrentStatusOfNFCRequest", getCurrentStatusOfNFCRequest);
 
 module.exports = nfcCardRequestsRouter;
 

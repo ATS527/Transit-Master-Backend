@@ -8,20 +8,20 @@ const {studentUpload} = require("../middleware/upload");
 
 studentRouter.post("/createStudent", createStudent);
 
-studentRouter.post("/createStudentDetails", isAuthenticatedUser, authorizeRoles("admin","station-master","student"), studentUpload.fields([{ name: "aadhar", maxCount: 1 }, { name: "income_certificate", maxCount: 1 }, { name: "ration_card", maxCount: 1 }]), createStudentDetails)
+studentRouter.post("/createStudentDetails", studentUpload.fields([{ name: "aadhar", maxCount: 1 }, { name: "income_certificate", maxCount: 1 }, { name: "ration_card", maxCount: 1 }]), createStudentDetails)
 
-studentRouter.get("/getAllStudents", isAuthenticatedUser, authorizeRoles("admin", "station-master"), getAllStudents);
+studentRouter.get("/getAllStudents", getAllStudents);
 
-studentRouter.delete("/deleteStudent/:id", isAuthenticatedUser, authorizeRoles("admin", "station-master"), deleteStudent);
+studentRouter.delete("/deleteStudent/:id", deleteStudent);
 
 studentRouter.post("/loginStudent", loginStudent);
 
 studentRouter.get("/logoutStudent", logoutStudent);
 
-studentRouter.get("/getCurrentlyLoggedinStudent", isAuthenticatedUser, authorizeRoles("student"), getCurrentlyLoggedinStudent);
+studentRouter.get("/getCurrentlyLoggedinStudent", getCurrentlyLoggedinStudent);
 
-studentRouter.get("/getStudentDetailsById/:id", isAuthenticatedUser, authorizeRoles("admin", "station-master","student"), getStudentDetailsById);
+studentRouter.get("/getStudentDetailsById/:id", getStudentDetailsById);
 
-studentRouter.put("/updateStudentDetails/:id", isAuthenticatedUser, authorizeRoles("admin", "station-master", "student"), studentUpload.fields([{ name: "aadhar", maxCount: 1 }, { name: "income_certificate", maxCount: 1 }, { name: "ration_card", maxCount: 1 }]), updateStudentDetails);
+studentRouter.put("/updateStudentDetails/:id", studentUpload.fields([{ name: "aadhar", maxCount: 1 }, { name: "income_certificate", maxCount: 1 }, { name: "ration_card", maxCount: 1 }]), updateStudentDetails);
 
 module.exports = studentRouter;

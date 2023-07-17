@@ -4,13 +4,13 @@ const { NFCAddBalance, NFCShowBalance, activateNFCCard, decrementNFCCardBalance 
 
 const { isAuthenticatedUser, authorizeRoles } = require("../middleware/auth");
 
-nfcCardRouter.get("/NFCShowBalance", isAuthenticatedUser, authorizeRoles("client", "student"), NFCShowBalance);
+nfcCardRouter.get("/NFCShowBalance", NFCShowBalance);
 
-nfcCardRouter.put("/NFCAddBalance", isAuthenticatedUser, authorizeRoles("admin","station-master","client", "student"), NFCAddBalance);
+nfcCardRouter.put("/NFCAddBalance",  NFCAddBalance);
 
-nfcCardRouter.put("/activateNFCCard/:id", isAuthenticatedUser, authorizeRoles("admin", "station-master"), activateNFCCard);
+nfcCardRouter.put("/activateNFCCard/:id", activateNFCCard);
 
-nfcCardRouter.put("/deactivateNFCCard/:id", isAuthenticatedUser, authorizeRoles("admin", "station-master"), deactivateNFCCard);
+nfcCardRouter.put("/deactivateNFCCard/:id", deactivateNFCCard);
 
 nfcCardRouter.get("/decrementNFCCardBalance", decrementNFCCardBalance);
 

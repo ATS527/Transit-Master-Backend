@@ -5,7 +5,7 @@ const NFCCard = require("../models/nfc_details");
 exports.createNFCCardRequest = async (req, res, next) => {
     try {
         const userDetails = await ClientDetails.findOne({
-            user_id: req.user.id,
+            user_id: req.query.user_id,
         });
 
         if (!userDetails) {
@@ -17,7 +17,7 @@ exports.createNFCCardRequest = async (req, res, next) => {
         }
 
         const requestCheck = await NFCCardRequests.findOne({
-            user_id: req.user._id,
+            user_id: req.query.user_id,
         });
 
         if (requestCheck) {
@@ -29,7 +29,7 @@ exports.createNFCCardRequest = async (req, res, next) => {
         }
 
         const request = await NFCCardRequests.create({
-            user_id: req.user._id,
+            user_id: req.query.user_id,
             is_student: userDetails.is_student,
         });
 
@@ -196,7 +196,7 @@ exports.getCurrentStatusOfNFCRequest = async (req, res) => {
     try {
         
         const request = await NFCCardRequests.findOne({
-            user_id: req.user._id,
+            user_id: req.query.user_id,
         });
 
         if (!request) {

@@ -59,7 +59,7 @@ exports.createClient = async (req, res, next) => {
 exports.createClientDetails = async (req, res, next) => {
     try {
         const userData = {
-            user_id: req.user._id,
+            user_id: req.body.user_id,
             is_student: false,
             full_name: req.body.full_name,
             phone_number: req.body.phone_number,

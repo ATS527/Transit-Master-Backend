@@ -8,20 +8,20 @@ const {clientUpload} = require("../middleware/upload");
 
 clientRouter.post("/createClient", createClient);
 
-clientRouter.post("/createClientDetails", isAuthenticatedUser, authorizeRoles("client"), clientUpload.fields([{ name: "aadhar", maxCount: 1 }, { name: "income_certificate", maxCount: 1 }, { name: "ration_card", maxCount: 1 }]), createClientDetails)
+clientRouter.post("/createClientDetails", clientUpload.fields([{ name: "aadhar", maxCount: 1 }, { name: "income_certificate", maxCount: 1 }, { name: "ration_card", maxCount: 1 }]), createClientDetails)
 
-clientRouter.get("/getAllClients", isAuthenticatedUser, authorizeRoles("admin", "station-master"), getAllClients);
+clientRouter.get("/getAllClients", getAllClients);
 
-clientRouter.delete("/deleteClient/:id", isAuthenticatedUser, authorizeRoles("admin", "station-master"), deleteClient);
+clientRouter.delete("/deleteClient/:id", deleteClient);
 
 clientRouter.post("/loginClient", loginClient);
 
 clientRouter.get("/logoutClient", logoutClient);
 
-clientRouter.get("/getCurrentlyLoggedinClient", isAuthenticatedUser, authorizeRoles("client"), getCurrentlyLoggedinClient);
+clientRouter.get("/getCurrentlyLoggedinClient", getCurrentlyLoggedinClient);
 
-clientRouter.get("/getClientDetailsById/:id", isAuthenticatedUser, authorizeRoles("admin", "station-master","client"), getClientDetailsById);
+clientRouter.get("/getClientDetailsById/:id", getClientDetailsById);
 
-clientRouter.put("/updateClientDetails/:id", isAuthenticatedUser, authorizeRoles("admin", "station-master","client"), clientUpload.fields([{ name: "aadhar", maxCount: 1 }, { name: "income_certificate", maxCount: 1 }, { name: "ration_card", maxCount: 1 }]), updateClientDetails);
+clientRouter.put("/updateClientDetails/:id", clientUpload.fields([{ name: "aadhar", maxCount: 1 }, { name: "income_certificate", maxCount: 1 }, { name: "ration_card", maxCount: 1 }]), updateClientDetails);
 
 module.exports = clientRouter;
