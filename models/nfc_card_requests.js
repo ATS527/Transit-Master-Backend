@@ -9,6 +9,10 @@ const nfcCardRequestsSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    status: {
+        type: String,
+        default: "Pending"
+    },
     is_student: {
         type: Boolean,
     }

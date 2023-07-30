@@ -4,16 +4,16 @@ const { createStationMaster, getAllStationMasters, getCurrentlyLoggedinStationMa
 
 const { isAuthenticatedUser, authorizeRoles} = require("../middleware/auth");
 
-stationMasterRouter.post("/createStationMaster", createStationMaster);
+stationMasterRouter.post("/createStationMaster", isAuthenticatedUser,authorizeRoles("admin") ,createStationMaster);
 
-stationMasterRouter.get("/getAllStationMasters", getAllStationMasters);
+stationMasterRouter.get("/getAllStationMasters",isAuthenticatedUser,authorizeRoles("admin"), getAllStationMasters);
 
 stationMasterRouter.post("/loginStationMaster",loginStationMaster);
 
-stationMasterRouter.get("/logoutStationMaster", logoutStationMaster);
+stationMasterRouter.get("/logoutStationMaster",logoutStationMaster);
 
-stationMasterRouter.get("/getCurrentlyLoggedinStationMaster", getCurrentlyLoggedinStationMaster);
+stationMasterRouter.get("/getCurrentlyLoggedinStationMaster",isAuthenticatedUser,authorizeRoles("station-master"), getCurrentlyLoggedinStationMaster);
 
-stationMasterRouter.delete("/deleteStationMaster/:email", deleteStationMaster);
+stationMasterRouter.delete("/deleteStationMaster/:email",isAuthenticatedUser,authorizeRoles("admin"), deleteStationMaster);
 
 module.exports = stationMasterRouter;

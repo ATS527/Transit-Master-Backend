@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use(cors({
-  origin: ["http://127.0.0.1:3000", "http://127.0.0.1:5500", "https://tm.govindsr.me", "https://transitserver.govindsr.me"],
+  origin: ["http://127.0.0.1:4000", "http://127.0.0.1:5500", "https://tm.govindsr.me", "https://transitserver.govindsr.me"],
   credentials: true,
 }));
 

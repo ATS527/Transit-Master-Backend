@@ -1,6 +1,7 @@
 const Admin = require("../models/user_model");
 const sendToken = require("../utils/jwtToken")
 const bcrypt = require("bcryptjs");
+const path = require("path");
 
 exports.createAdmin = async (req, res, next) => {
     try {

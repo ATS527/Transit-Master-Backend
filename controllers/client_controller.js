@@ -6,7 +6,7 @@ const fs = require("fs").promises;
 const NFCCardRequest = require("../models/nfc_card_requests");
 const NFCCard = require("../models/nfc_details");
 
-const client_server_url = process.env.SERVER_URL + "/client_documents/";
+const client_server_url = (process.env.SERVER_URL || "http://127.0.0.1:4000") + "/client_documents/";
 
 exports.createClient = async (req, res, next) => {
     try {
@@ -59,7 +59,7 @@ exports.createClient = async (req, res, next) => {
 exports.createClientDetails = async (req, res, next) => {
     try {
         const userData = {
-            user_id: req.body.user_id,
+            user_id: req.user._id,
             is_student: false,
             full_name: req.body.full_name,
             phone_number: req.body.phone_number,
@@ -258,7 +258,6 @@ exports.loginClient = async (req, res, next) => {
             });
             return;
         }
-
         sendToken(client, 200, res);
     } catch (err) {
         console.log(err);

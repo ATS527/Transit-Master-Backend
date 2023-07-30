@@ -5,7 +5,7 @@ const NFCCard = require("../models/nfc_details");
 exports.createNFCCardRequest = async (req, res, next) => {
     try {
         const userDetails = await ClientDetails.findOne({
-            user_id: req.query.user_id,
+            user_id: req.user._id,
         });
 
         if (!userDetails) {
@@ -17,7 +17,7 @@ exports.createNFCCardRequest = async (req, res, next) => {
         }
 
         const requestCheck = await NFCCardRequests.findOne({
-            user_id: req.query.user_id,
+            user_id: req.user._id,
         });
 
         if (requestCheck) {
@@ -29,7 +29,7 @@ exports.createNFCCardRequest = async (req, res, next) => {
         }
 
         const request = await NFCCardRequests.create({
-            user_id: req.query.user_id,
+            user_id: req.user._id,
             is_student: userDetails.is_student,
         });
 
@@ -133,7 +133,7 @@ exports.getNFCCardRequestDetailed = async (req, res, next) => {
 
         const clientDetails = await ClientDetails.findOne({
             user_id: request.user_id,
-        },"-__v");
+        }, "-__v");
 
         res.status(200).json({
             success: true,
@@ -153,11 +153,7 @@ exports.getNFCCardRequestDetailed = async (req, res, next) => {
 exports.validateNFCCardRequest = async (req, res, next) => {
     try {
         const request = await NFCCardRequests.findOne({
-            _id: req.params.id,
-        });
-
-        const userDetails = await ClientDetails.findOne({
-            user_id: request.user_id,
+            _id: req.body.id,
         });
 
         if (!request) {
@@ -168,19 +164,28 @@ exports.validateNFCCardRequest = async (req, res, next) => {
             return;
         }
 
-        request.is_validated = true;
-
-        await request.save();
-
-        await NFCCard.create({
-            user_id: userDetails.user_id,
-            balance: 10,
-            is_valid: true,
+        const userDetails = await ClientDetails.findOne({
+            user_id: request.user_id,
         });
+
+        if (req.body.status == true) {
+            request.is_validated = true;
+            request.status = "Accepted"
+            await request.save();
+
+            await NFCCard.create({
+                user_id: userDetails.user_id,
+                balance: 10,
+                is_valid: true,
+            });
+        } else {
+            request.status = "Rejected";
+            await request.save();
+        }
 
         res.status(200).json({
             success: true,
-            message: "Request validated successfully",
+            message: "Request processed successfully",
         });
     } catch (err) {
         console.log(err);
@@ -194,9 +199,9 @@ exports.validateNFCCardRequest = async (req, res, next) => {
 
 exports.getCurrentStatusOfNFCRequest = async (req, res) => {
     try {
-        
+
         const request = await NFCCardRequests.findOne({
-            user_id: req.query.user_id,
+            user_id: req.user._id,
         });
 
         if (!request) {

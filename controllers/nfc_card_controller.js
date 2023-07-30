@@ -3,7 +3,7 @@ const NFCCard = require("../models/nfc_details");
 exports.NFCShowBalance = async (req, res, next) => {
     try {
         const nfcCard = await NFCCard.findOne({
-            user_id: req.query.user_id,
+            user_id: req.user._id,
         });
 
         if (!nfcCard) {
@@ -39,7 +39,7 @@ exports.NFCShowBalance = async (req, res, next) => {
 exports.NFCAddBalance = async (req, res, next) => {
     try {
         const nfcCard = await NFCCard.findOne({
-            user_id: req.query.user_id,
+            user_id: req.user._id,
         });
 
         if (!nfcCard) {

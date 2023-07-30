@@ -1,26 +1,23 @@
 const mongoose = require("mongoose");
 
 const routeSchema = new mongoose.Schema({
-    route_id: {
-        type: String,
-        primaryKey: true
-    },
     bus_type: {
         type: String,
     },
-    route: {
-        route_from : {
-            type: String,
-        },
-        route_to : {
-            type: String,
-        },
-        time_from : {
-            type: Date,
-        },
-        time_to : {
-            type: Date,
-        }
+    depot: {
+        type: String,
+    },
+    route_from: {
+        type: String,
+    },
+    route_to: {
+        type: String,
+    },
+    time_from: {
+        type: Date,
+    },
+    time_to: {
+        type: Date,
     },
     route_stops: [{
         stop_name: {
@@ -41,7 +38,7 @@ const routeSchema = new mongoose.Schema({
     },
 });
 
-routeSchema.pre("save", function(next) {
+routeSchema.pre("save", function (next) {
     const currentDate = new Date();
     this.updatedAt = currentDate;
     if (!this.createdAt) {

@@ -141,7 +141,7 @@ exports.getCurrentlyLoggedinStationMaster = async (req, res, next) => {
     try {
         const stationMaster = await StationMaster.find({
             _id: req.user._id,
-        },"-password");
+        }, "-password");
 
         if (!stationMaster) {
             res.status(401).json({
@@ -170,10 +170,19 @@ exports.deleteStationMaster = async (req, res, next) => {
         const stationMaster = await StationMaster.findOneAndDelete({
             email: req.params.email
         }).then((result) => {
-            res.status(200).json({
-                success: true,
-                message: "Station Master deleted successfully",
-            });
+            console.log(result);
+            if (!result) {
+                res.status(200).json({
+                    success: true,
+                    message: "Station Master not found!",
+                });
+                return;
+            } else {
+                res.status(200).json({
+                    success: true,
+                    message: "Station Master deleted successfully",
+                });
+            }
         }).catch(err => {
             console.log(err);
             res.status(200).json({

@@ -13,8 +13,6 @@ const sendToken = (user, statusCode, res) => {
         ),
         httpOnly: true,
         sameSite: "None",
-        // secure: true,
-        // domain: ".govindsr.me",
     };
     res.cookie('token', token, options);
     res.status(200).send({ success: true, user });

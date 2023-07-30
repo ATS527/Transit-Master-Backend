@@ -4,7 +4,7 @@ const sendToken = require("../utils/jwtToken")
 const bcrypt = require("bcryptjs");
 const fs = require("fs").promises;
 
-const student_server_url = process.env.SERVER_URL + "/student_documents/";
+const student_server_url = (process.env.SERVER_URL || "http://127.0.0.1:4000") + "/student_documents/";
 
 exports.createStudent = async (req, res, next) => {
     try {
@@ -58,7 +58,7 @@ exports.createStudentDetails = async (req, res, next) => {
     try {
 
         const studentDetails = await StudentDetails.findOne({
-            user_id: req.query.user_id,
+            user_id: req.user._id,
         });
 
         if (studentDetails) {
@@ -70,7 +70,7 @@ exports.createStudentDetails = async (req, res, next) => {
         }
 
         await StudentDetails.create({
-            user_id: req.query.user_id,
+            user_id: req.user._id,
             full_name: req.body.full_name,
             phone_number: req.body.phone_number,
             address: req.body.address,
@@ -80,7 +80,7 @@ exports.createStudentDetails = async (req, res, next) => {
         });
 
         const student = await StudentDetails.findOne({
-            user_id: req.query.user_id,
+            user_id: req.user._id,
         });
 
         if (req.files) {
@@ -115,7 +115,7 @@ exports.createStudentDetails = async (req, res, next) => {
 exports.updateStudentDetails = async (req, res, next) => {
     try {
         const studentDetails = await StudentDetails.findOne({
-            user_id: req.params.id,
+            user_id: req.user._id,
         });
 
         if (!studentDetails) {
