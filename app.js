@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use(cors({
-  origin: ["http://127.0.0.1:4000", "http://127.0.0.1:5500", "https://transitserver.theinfinox.in","https://transitmaster.theinfinox.in"],
+  origin: ["http://127.0.0.1:4000", "http://127.0.0.1:5500", "https://tm.ceal.club","https://tmserver.ceal.club"],
   credentials: true,
 }));
 
