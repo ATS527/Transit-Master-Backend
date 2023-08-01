@@ -10,9 +10,6 @@ routeRouter.get("/getAllRoutes", isAuthenticatedUser, authorizeRoles("admin","st
 
 routeRouter.put("/updateRoute/:id" , isAuthenticatedUser, authorizeRoles("admin", "station-master"), updateRoute);
 
-routeRouter.put("/deleteRoute" , isAuthenticatedUser, authorizeRoles("admin", "station-master"), deleteRoute);
+routeRouter.delete("/deleteRoute/:id" , isAuthenticatedUser, authorizeRoles("admin", "station-master"), deleteRoute);
 
 module.exports = routeRouter;
-
-
-

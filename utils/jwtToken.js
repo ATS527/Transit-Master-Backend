@@ -15,7 +15,7 @@ const sendToken = (user, statusCode, res) => {
         sameSite: "None",
     };
     res.cookie('token', token, options);
-    res.status(200).send({ success: true, user });
+    res.status(200).send({ success: true, user, token });
 }
 
 module.exports = sendToken;
