@@ -46,7 +46,7 @@ exports.createBus = async (req, res) => {
         console.log(err);
         res.status(500).json({
             success: false,
-            message: "Bus creation failed",
+            message: "Server error",
             error: err,
         });
     }
@@ -71,39 +71,39 @@ exports.getAllBuses = async (req, res) => {
     }
 }
 
-exports.getBusByBusNumber = async (req, res) => {
-    try {
-        const bus = await BusDetails.findOne({
-            bus_number: req.params.id,
-        });
+// exports.getBusByBusNumber = async (req, res) => {
+//     try {
+//         const bus = await BusDetails.findOne({
+//             bus_number: req.params.id,
+//         });
 
-        if (!bus) {
-            res.status(404).json({
-                success: false,
-                message: "Bus not found",
-            });
-            return;
-        }
+//         if (!bus) {
+//             res.status(404).json({
+//                 success: false,
+//                 message: "Bus not found",
+//             });
+//             return;
+//         }
 
-        res.status(200).json({
-            success: true,
-            message: "Get bus by bus number success",
-            data: bus,
-        });
-    } catch (err) {
-        console.log(err);
-        res.status(500).json({
-            success: false,
-            message: "Get bus by bus number failed",
-            error: err,
-        });
-    }
-}
+//         res.status(200).json({
+//             success: true,
+//             message: "Get bus by bus number success",
+//             data: bus,
+//         });
+//     } catch (err) {
+//         console.log(err);
+//         res.status(500).json({
+//             success: false,
+//             message: "Get bus by bus number failed",
+//             error: err,
+//         });
+//     }
+// }
 
 exports.updateBusByBusNumber = async (req, res) => {
     try {
         const bus = await BusDetails.findOne({
-            bus_number: req.params.id,
+            bus_number: req.body.bus_number,
         });
 
         if (!bus) {
@@ -115,8 +115,6 @@ exports.updateBusByBusNumber = async (req, res) => {
         }
 
         bus.bus_depot = req.body.bus_depot;
-        bus.bus_number = req.body.bus_number;
-        bus.status = req.body.status;
         bus.total_seats = req.body.total_seats;
 
         await bus.save();
@@ -139,7 +137,7 @@ exports.updateBusByBusNumber = async (req, res) => {
 exports.deleteBusByBusNumber = async (req, res) => {
     try {
         const bus = await BusDetails.findOne({
-            bus_number: req.params.id,
+            _id: req.params.id,
         });
 
         if (!bus) {
@@ -151,7 +149,7 @@ exports.deleteBusByBusNumber = async (req, res) => {
         }
 
         await BusDetails.deleteOne({
-            bus_number: req.params.id,
+            _id: req.params.id,
         });
 
         res.status(200).json({

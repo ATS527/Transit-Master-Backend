@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use(cors({
-  origin: ["http://127.0.0.1:4000", "http://127.0.0.1:5500", "https://tm.govindsr.me", "https://transitserver.govindsr.me"],
+  origin: ["http://127.0.0.1:4000", "http://127.0.0.1:5500", "https://transitserver.theinfinox.in","https://transitmaster.theinfinox.in"],
   credentials: true,
 }));
 
@@ -24,6 +24,8 @@ const clientRouter = require("./routes/client_route");
 const studentRouter = require("./routes/student_route");
 const nfcCardRequestsRouter = require("./routes/nfc_card_requests_route");
 const nfcCardRouter = require("./routes/nfc_card_route");
+const busRouter = require("./routes/bus_route");
+const routeRouter = require("./routes/route_route");
 
 //express serve public folder as static
 app.use(express.static(path.join(__dirname, "public")));
@@ -34,8 +36,8 @@ app.use("/api/v2", clientRouter);
 app.use("/api/v2", studentRouter);
 app.use("/api/v2", nfcCardRequestsRouter);
 app.use("/api/v2", nfcCardRouter);
-
-
+app.use("/api/v2", busRouter);
+app.use("/api/v2", routeRouter);
 
 app.get("/", (req, res) => {
   res.end("Hello from transit-master-server");

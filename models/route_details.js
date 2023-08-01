@@ -14,17 +14,17 @@ const routeSchema = new mongoose.Schema({
         type: String,
     },
     time_from: {
-        type: Date,
+        type: String,
     },
     time_to: {
-        type: Date,
+        type: String,
     },
     route_stops: [{
         stop_name: {
             type: String,
         },
         stop_time: {
-            type: Date,
+            type: String,
         },
     }],
     price_per_km: {

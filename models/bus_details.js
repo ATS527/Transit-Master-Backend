@@ -13,9 +13,6 @@ const busSchema = new mongoose.Schema({
     total_seats: {
         type: Number,
     },
-    status: {
-        type: String,
-    },
     createdAt: {
         type: Date,
     },
