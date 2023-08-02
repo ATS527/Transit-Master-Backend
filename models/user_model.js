@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
     email: {
         type: String,
         unique: true,
-        required:  true,
+        required: true,
     },
     password: {
         type: String,
@@ -26,8 +26,9 @@ const userSchema = new mongoose.Schema({
     },
 });
 
-userSchema.pre("save", function(next) {
+userSchema.pre("save", function (next) {
     var date = convertUTCDateToLocalDate(new Date());
+    //convert the utc time to ist
     // const currentDate = new Date();
     const currentDate = date;
     this.updatedAt = currentDate;
@@ -39,14 +40,17 @@ userSchema.pre("save", function(next) {
 });
 
 function convertUTCDateToLocalDate(date) {
-    var newDate = new Date(date.getTime()+date.getTimezoneOffset()*60*1000);
+    var currentTime = new Date();
 
-    var offset = date.getTimezoneOffset() / 60;
-    var hours = date.getHours();
+    var currentOffset = currentTime.getTimezoneOffset();
 
-    newDate.setHours(hours - offset);
+    var ISTOffset = 330;   // IST offset UTC +5:30 
 
-    return newDate;   
+    var ISTTime = new Date(currentTime.getTime() + (ISTOffset + currentOffset) * 60000);
+
+    const exactTime = ISTTime.getTime();
+
+    return exactTime;
 }
 
 module.exports = mongoose.model("User", userSchema);
