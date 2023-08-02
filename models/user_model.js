@@ -27,7 +27,9 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.pre("save", function(next) {
-    const currentDate = new Date();
+    var date = convertUTCDateToLocalDate(new Date());
+    // const currentDate = new Date();
+    const currentDate = date;
     this.updatedAt = currentDate;
     if (!this.createdAt) {
         this.createdAt = currentDate;
@@ -35,5 +37,16 @@ userSchema.pre("save", function(next) {
     this.password = bcrypt.hashSync(this.password, 10);
     next();
 });
+
+function convertUTCDateToLocalDate(date) {
+    var newDate = new Date(date.getTime()+date.getTimezoneOffset()*60*1000);
+
+    var offset = date.getTimezoneOffset() / 60;
+    var hours = date.getHours();
+
+    newDate.setHours(hours - offset);
+
+    return newDate;   
+}
 
 module.exports = mongoose.model("User", userSchema);
