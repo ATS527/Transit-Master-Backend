@@ -8,10 +8,12 @@ const routeSchema = new mongoose.Schema({
         type: String,
     },
     route_from: {
-        type: String,
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: "StopDetail",
     },
     route_to: {
-        type: String,
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: "StopDetail",
     },
     time_from: {
         type: String,
@@ -20,14 +22,16 @@ const routeSchema = new mongoose.Schema({
         type: String,
     },
     route_stops: [{
-        stop_name: {
-            type: String,
-        },
+        _id: false,
         stop_time: {
             type: String,
         },
+        stop_id: {
+            type: mongoose.SchemaTypes.ObjectId,
+            ref: "StopDetail"
+        }
     }],
-    price_per_km: {
+    price_per_stop: {
         type: Number,
     },
     createdAt: {
@@ -47,4 +51,4 @@ routeSchema.pre("save", function (next) {
     next();
 });
 
-module.exports = mongoose.model("RouteDetails", routeSchema);
+module.exports = mongoose.model("RouteDetail", routeSchema);

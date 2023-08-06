@@ -1,6 +1,6 @@
 const busRouteRouter = require('express').Router();
 
-const {createBusRoute,deleteBusRouteById,getAllBusRoutes,getBusRouteById,updateBusRouteById} = require("../controllers/bus_route_controller");
+const {createBusRoute,deleteBusRouteById,getAllBusRoutes,getBusRouteById,updateBusRouteById, incrementStop, getCurrentStop} = require("../controllers/bus_route_controller");
 
 const {isAuthenticatedUser,authorizeRoles} = require("../middleware/auth");
 
@@ -13,5 +13,9 @@ busRouteRouter.get("/getBusRouteById/:id",isAuthenticatedUser,authorizeRoles("ad
 busRouteRouter.put("/updateBusRouteById/:id",isAuthenticatedUser,authorizeRoles("admin","station-master"),updateBusRouteById);
 
 busRouteRouter.delete("/deleteBusRouteById/:id",isAuthenticatedUser,authorizeRoles("admin","station-master"),deleteBusRouteById);
+
+busRouteRouter.put("/incrementStop",isAuthenticatedUser,authorizeRoles("admin","station-master"),incrementStop);
+
+busRouteRouter.get("/getCurrentStop/:id", isAuthenticatedUser, authorizeRoles("admin", "station-master", "client", "student"), getCurrentStop);
 
 module.exports = busRouteRouter;

@@ -26,6 +26,9 @@ const nfcCardRequestsRouter = require("./routes/nfc_card_requests_route");
 const nfcCardRouter = require("./routes/nfc_card_route");
 const busRouter = require("./routes/bus_route");
 const routeRouter = require("./routes/route_route");
+const busRouteRouter = require("./routes/bus_routes_route");
+const bookingRouter = require("./routes/booking_route");
+const stopRouter = require("./routes/stop_route");
 
 //express serve public folder as static
 app.use(express.static(path.join(__dirname, "public")));
@@ -38,7 +41,9 @@ app.use("/api/v2", nfcCardRequestsRouter);
 app.use("/api/v2", nfcCardRouter);
 app.use("/api/v2", busRouter);
 app.use("/api/v2", routeRouter);
-
+app.use("/api/v2", busRouteRouter);
+app.use("/api/v2", bookingRouter);
+app.use("/api/v2", stopRouter);
 
 app.get("/", (req, res) => {
   res.end("Hello from transit-master-server");

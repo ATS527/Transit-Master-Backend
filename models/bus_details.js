@@ -30,4 +30,4 @@ busSchema.pre("save", function(next) {
     next();
 });
 
-module.exports = mongoose.model("BusDetails", busSchema);
+module.exports = mongoose.model("BusDetail", busSchema);

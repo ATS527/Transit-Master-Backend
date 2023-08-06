@@ -1,6 +1,6 @@
 const adminRouter = require('express').Router();
 
-const { createAdmin, getCurrentlyLoggedinAdmin, getAllAdmins, loginAdmin, logoutAdmin, deleteAdmin } = require("../controllers/admin_controller");
+const { createAdmin, getAllAdmins, getCurrentlyLoggedinAdmin, loginAdmin, logoutAdmin, deleteAdmin } = require("../controllers/admin_controller");
 
 const { isAuthenticatedUser, authorizeRoles } = require("../middleware/auth");
 

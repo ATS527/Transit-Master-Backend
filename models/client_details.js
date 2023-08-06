@@ -55,4 +55,4 @@ clientSchema.pre("save", function(next) {
     next();
 });
 
-module.exports = mongoose.model("clientDetails", clientSchema);
+module.exports = mongoose.model("clientDetail", clientSchema);

@@ -147,7 +147,7 @@ exports.updateClientDetails = async (req, res, next) => {
                         }
                     });
                 }
-                clientDetails.aadhar_card_link = client_server_url + req.  files.aadhar[0].filename;
+                clientDetails.aadhar_card_link = client_server_url + req.files.aadhar[0].filename;
             }
             if (req.files.ration_card) {
                 if (clientDetails.ration_link !== undefined) {

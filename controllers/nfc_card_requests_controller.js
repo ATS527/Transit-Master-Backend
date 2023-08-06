@@ -71,7 +71,6 @@ exports.getAllNFCCardClientRequests = async (req, res, next) => {
                     user_id: requests[i].user_id,
                 }),
             }
-            console.log(map);
             result.push(map)
         }
 

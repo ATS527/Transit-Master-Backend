@@ -27,4 +27,4 @@ nfcCardRequestsSchema.pre("save", function(next) {
     next();
 });
 
-module.exports = mongoose.model("nfcCardRequests", nfcCardRequestsSchema);
+module.exports = mongoose.model("nfcCardRequest", nfcCardRequestsSchema);

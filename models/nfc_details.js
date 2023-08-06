@@ -31,4 +31,4 @@ nfcSchema.pre("save", function(next) {
     next();
 });
 
-module.exports = mongoose.model("NFCUsers", nfcSchema);
+module.exports = mongoose.model("NFCUser", nfcSchema);

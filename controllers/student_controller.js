@@ -144,7 +144,6 @@ exports.updateStudentDetails = async (req, res, next) => {
                 }
                 studentDetails.income_link = student_server_url + req.files.income_certificate[0].filename;
                 await studentDetails.save().then(result => {
-                    console.log(result)   
                 }).catch(err => {
                     console.log(err);   
                 });

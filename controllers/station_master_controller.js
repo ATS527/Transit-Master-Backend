@@ -170,7 +170,6 @@ exports.deleteStationMaster = async (req, res, next) => {
         const stationMaster = await StationMaster.findOneAndDelete({
             email: req.params.email
         }).then((result) => {
-            console.log(result);
             if (!result) {
                 res.status(200).json({
                     success: true,

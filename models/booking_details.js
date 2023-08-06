@@ -1,17 +1,21 @@
 const mongoose = require("mongoose");
 
 const bookingSchema = new mongoose.Schema({
-    bus_id: {
+    bus_route_id: {
         type: mongoose.SchemaTypes.ObjectId,
+        ref: "BusRoute",
     },
-    route_id: {
+    user_id: {
         type: mongoose.SchemaTypes.ObjectId,
+        ref: "User",
     },
     getin_stop: {
-        type: String,
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: "StopDetail",
     },
     getout_stop: {
-        type: String,
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: "StopDetail",
     },
     amount: {
         type: Number,
@@ -24,7 +28,7 @@ const bookingSchema = new mongoose.Schema({
     },
 });
 
-bookingSchema.pre("save", function(next) {
+bookingSchema.pre("save", function (next) {
     const currentDate = new Date();
     this.updatedAt = currentDate;
     if (!this.createdAt) {
@@ -33,4 +37,4 @@ bookingSchema.pre("save", function(next) {
     next();
 });
 
-module.exports = mongoose.model("BookingDetails", bookingSchema);
+module.exports = mongoose.model("BookingDetail", bookingSchema);

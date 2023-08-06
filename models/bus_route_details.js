@@ -1,13 +1,22 @@
 const mongoose = require("mongoose");
+const Route = require("./route_details");
+const Bus = require("./bus_details");
 
 const busRouteSchema = new mongoose.Schema({
     bus_id: {
         type: mongoose.SchemaTypes.ObjectId,
-        ref: "BusDetails",
+        ref: "BusDetail",
     },
     route_id: {
         type: mongoose.SchemaTypes.ObjectId,
-        ref: "RouteDetails",
+        ref: "RouteDetail",
+    },
+    seating_availability: {
+        type: Number,
+    },
+    current_location: {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: "StopDetail",
     },
     createdAt: {
         type: Date,
