@@ -265,6 +265,13 @@ exports.getCurrentStop = async (req, res) => {
         BusRoute.findOne({
             _id: req.params.id
         }).populate("current_location").then(result => {
+            if(!result) {
+                res.status(404).json({
+                    success: false,
+                    message: "Bus route not found",
+                });
+                return;
+            }
             res.status(200).json({
                 success: true,
                 message: "Get current stop success",
