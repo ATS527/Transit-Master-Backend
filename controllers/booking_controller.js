@@ -237,8 +237,11 @@ exports.verifyBookingWithNFC = async (req, res) => {
         booking.status = "generated";
         await booking.save();
 
+        console.log(booking);
+
         res.status(200).json({
             success: true,
+            booking,
             message: "Verify booking success",
         });
     } catch (err) {
