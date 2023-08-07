@@ -234,8 +234,7 @@ exports.verifyBookingWithNFC = async (req, res) => {
             return;
         }
 
-        booking.status = "generated";
-        await booking.save();
+        await BookingDetails.updateOne({user_id: nfcard.user_id}, {status: "generated"});
 
         console.log(booking);
 
