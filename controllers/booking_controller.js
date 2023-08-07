@@ -2,8 +2,6 @@ const BookingDetails = require("../models/booking_details");
 const BusRoute = require("../models/bus_route_details");
 const RouteDetails = require("../models/route_details");
 const NFCCard = require("../models/nfc_details");
-const Bus = require("../models/bus_details");
-const StopDetails = require("../models/stop_details");
 
 exports.showAvailableRoutes = async (req, res) => {
     try {
@@ -191,6 +189,57 @@ exports.getAllBookings = async (req, res) => {
             success: true,
             message: "Get all bookings success",
             bookings: bookings,
+        });
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: "Something went wrong",
+            error: err,
+        });
+    }
+}
+
+exports.verifyBookingWithNFC = async (req, res) => {
+    try {
+        const nfcard = await NFCCard.findOne({
+            card_id: req.query.card_id
+        });
+
+        if (!nfcard) {
+            res.status(404).json({
+                success: false,
+                message: "NFC card not found",
+            });
+            return;
+        }
+
+        if (nfcard.is_valid === false) {
+            res.status(400).json({
+                success: false,
+                message: "NFC card is invalid",
+            });
+            return;
+        }
+
+        const booking = await BookingDetails.findOne({
+            user_id: nfcard.user_id,
+            status: "booked",
+        });
+
+        if (!booking) {
+            res.status(404).json({
+                success: false,
+                message: "Booking not found",
+            });
+            return;
+        }
+
+        booking.status = "generated";
+        await booking.save();
+
+        res.status(200).json({
+            success: true,
+            message: "Verify booking success",
         });
     } catch (err) {
         res.status(500).json({

@@ -20,6 +20,9 @@ const bookingSchema = new mongoose.Schema({
     amount: {
         type: Number,
     },
+    status: {
+        type: String,
+    },
     createdAt: {
         type: Date,
     },
@@ -34,6 +37,7 @@ bookingSchema.pre("save", function (next) {
     if (!this.createdAt) {
         this.createdAt = currentDate;
     }
+    this.status = "booked";
     next();
 });
 
