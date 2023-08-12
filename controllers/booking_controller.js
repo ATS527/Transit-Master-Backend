@@ -2,6 +2,9 @@ const BookingDetails = require("../models/booking_details");
 const BusRoute = require("../models/bus_route_details");
 const RouteDetails = require("../models/route_details");
 const NFCCard = require("../models/nfc_details");
+const ClientDetails = require("../models/client_details");
+
+const client = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.AUTH_TOKEN);
 
 exports.showAvailableRoutes = async (req, res) => {
     try {
@@ -234,7 +237,22 @@ exports.verifyBookingWithNFC = async (req, res) => {
             return;
         }
 
-        await BookingDetails.updateOne({user_id: nfcard.user_id}, {status: "generated"}).then(result => {
+        await BookingDetails.updateOne({ user_id: nfcard.user_id }, { status: "generated" }).then(async result => {
+
+            const clientDetails = await ClientDetails.findOne({
+                user_id: nfcard.user_id,
+            });
+
+            client.messages
+                .create({
+                    body: 'Hello from transit master. Your booking has been verified.\n\nBooking details:\n\nBus route: ' + booking.bus_route_id.bus_route_name + '\nDeparture: ' + booking.getin_stop.stop_name + '\nDestination: ' + booking.getout_stop.stop_name + '\nAmount: ' + booking.amount + '\n\nThank you for using transit master.',
+                    to: '+91' + clientDetails.phone_number, // Text your number
+                    from: '+18156450625', // From a valid Twilio number
+                })
+                .then((message) => console.log(message.sid)).catch(err => {
+                    console.log(err);
+                });
+
             res.status(200).json({
                 success: true,
                 result,
